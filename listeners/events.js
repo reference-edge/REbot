@@ -80,6 +80,80 @@ module.exports = controller => {
         });
     });
 
+    controller.on('create_channel', (auth, bot) => {
+
+        bot.api.channels.create({
+            token: auth.access_token,
+            name: 'crp_team'
+        }, (err, result) => {
+
+            if (err) {
+                return logger.log('channel create error:', err);
+            }
+            const crpTeamChannel = {
+                id: result.channel.id,
+                name: result.channel.name,
+                team_id: auth.identity.team_id
+            };
+            controller.storage.channels.save(crpTeamChannel, (err, id) => {
+
+                if (err) {
+                    logger.log('channel save error:', err);
+                }
+            });
+        });
+    });
+
+    controller.on('oauth_success', auth => {
+
+        controller.storage.teams.get(auth.identity.team_id, (err, team) => {
+            let isNew = false;
+
+            if (!team) {
+                team = {
+                    id: auth.identity.team_id,
+                    createdBy: auth.identity.user_id,
+                    url: auth.identity.url,
+                    name: auth.identity.team,
+                    is_migrating: false
+                };
+                isNew = true;
+            }
+
+            team.bot = {
+                token: auth.bot.bot_access_token,
+                user_id: auth.bot.bot_user_id,
+                createdBy: auth.identity.user_id,
+                app_token: auth.access_token,
+            };
+            let botInstance = controller.spawn(team.bot);
+
+            botInstance.api.auth.test({}, (err, botAuth) => {
+
+                if (err) {
+                    logger.log('auth error:', err);
+                } else {
+                    team.bot.name = botAuth.user;
+                    botInstance.identity = botAuth;
+                    botInstance.team_info = team;
+
+                    controller.storage.teams.save(team, (saveErr, id) => {
+
+                        if (saveErr) {
+                            logger.log('team save error:', saveErr);
+                        } else {
+
+                            if (isNew) {
+                                controller.trigger('create_channel', [auth, botInstance]);
+                                controller.trigger('onboard', [botInstance, team]);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    });
+
     controller.on('post-message', async data => {
 
         try {
