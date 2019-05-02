@@ -1,6 +1,6 @@
 const Botkit = require('botkit');
 const mongoProvider = require('./db/mongo-provider')({
-    mongoUri: `mongodb+srv://REFEDGE_USER_1:${process.env.MONGO_PW}@cluster1refedge-cuehc.mongodb.net/${process.env.DB_NAME}?retryWrites=true`
+    mongoUri: `mongodb+srv://gaurav-saini:${process.env.MONGO_PW}@slackedge-test-skasp.mongodb.net/${process.env.DB_NAME}?retryWrites=true`
 });
 
 const saveTeamUtil = require('./util/save-team');
