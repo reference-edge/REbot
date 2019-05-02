@@ -9,10 +9,6 @@ module.exports = (app, controller) => {
             if (!req.body.teamId) {
                 return res.status(400).json({ ok: false, msg: 'team id is required' });
             }
-
-            if (!req.body.userEmail) {
-                return res.status(400).json({ ok: false, msg: 'user email is required' });
-            }
             const isTeamMigrating = await checkTeamMigration(req.body.teamId, controller);
 
             if (!isTeamMigrating) {

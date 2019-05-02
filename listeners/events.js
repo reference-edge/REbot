@@ -92,7 +92,7 @@ module.exports = controller => {
                 }
                 const bot = controller.spawn(team.bot);
 
-                if (data.userEmail != '') {
+                if (data.userEmail) {
 
                     bot.api.users.lookupByEmail({
                         token: team.bot.token,
