@@ -6,6 +6,7 @@ const logger = require('../../common/logger');
 module.exports = (app, controller) => {
 
     app.get('/sfauth/callback', async (req, res) => {
+        console.log('auth callback', req.query);
 
         try {
 
