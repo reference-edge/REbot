@@ -10,8 +10,8 @@ module.exports = (app, controller) => {
                 return res.status(400).json({ ok: false, msg: 'team id is required' });
             }
 
-            if (!req.body.userEmail && !req.body.channelId) {
-                return res.status(400).json({ ok: false, msg: 'either user email or channel id is required' });
+            if (!req.body.userEmail) {
+                return res.status(400).json({ ok: false, msg: 'user email is required' });
             }
             const isTeamMigrating = await checkTeamMigration(req.body.teamId, controller);
 
@@ -20,7 +20,7 @@ module.exports = (app, controller) => {
                 controller.trigger('post-message', [req.body]);
                 return res.status(200).json({ ok: true, msg: 'message posted to slack' });
             }
-            res.status(200).json({ ok: true, msg: 'team migration is in progress' });
+            res.status(200).json({ ok: true, msg: 'team migration is in progress, cannot post message' });
         } catch (err) {
             logger.log(err);
         }

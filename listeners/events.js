@@ -92,23 +92,23 @@ module.exports = controller => {
                 }
                 const bot = controller.spawn(team.bot);
 
-                if (data.userEmail) {
+                if (data.userEmail != '') {
 
                     bot.api.users.lookupByEmail({
                         token: team.bot.token,
                         email: data.userEmail
                     }, (err, result) => {
-    
+
                         if (err) {
                             logger.log(err);
                         }
-    
+
                         if (!result) {
                             return logger.log('user not found, provided email:', data.userEmail);
                         }
-    
+
                         bot.startPrivateConversation({ user: result.user.id }, (err, convo) => {
-    
+
                             if (err) {
                                 logger.log(err);
                             } else {
@@ -116,8 +116,12 @@ module.exports = controller => {
                             }
                         });
                     });
-                } else if (data.channelId) {
-                    bot.say({ text: data.message, channel: data.channelId });
+                } else {
+                    const channels = await controller.storage.channels.find({ team_id: data.teamId });
+
+                    if (channels && channels.length > 0) {
+                        bot.say({ text: data.message, channel: channels[0].id });
+                    }
                 }
             }
         } catch (err) {
