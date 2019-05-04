@@ -2,6 +2,7 @@
 const logger = require('../common/logger');
 const connFactory = require('../util/connection-factory');
 const { saveTeamId } = require('../util/refedge');
+const { checkTeamMigration } = require('./middleware/migration-filter');
 
 module.exports = controller => {
 
