@@ -154,50 +154,53 @@ module.exports = controller => {
         });
     });
 
-    controller.on('post-message', async data => {
+    controller.on('post-message', async messages => {
 
         try {
 
-            if (data.teamId) {
-                const team = await controller.storage.teams.get(data.teamId);
+            messages.forEach(data => {
 
-                if (!team) {
-                    return logger.log('team not found, provided id:', data.teamId);
-                }
-                const bot = controller.spawn(team.bot);
+                if (data.teamId) {
+                    const team = await controller.storage.teams.get(data.teamId);
 
-                if (data.userEmail) {
+                    if (!team) {
+                        return logger.log('team not found for id:', data.teamId);
+                    }
+                    const bot = controller.spawn(team.bot);
 
-                    bot.api.users.lookupByEmail({
-                        token: team.bot.token,
-                        email: data.userEmail
-                    }, (err, result) => {
+                    if (data.userEmail) {
 
-                        if (err) {
-                            logger.log(err);
-                        }
-
-                        if (!result) {
-                            return logger.log('user not found, provided email:', data.userEmail);
-                        }
-
-                        bot.startPrivateConversation({ user: result.user.id }, (err, convo) => {
+                        bot.api.users.lookupByEmail({
+                            token: team.bot.token,
+                            email: data.userEmail
+                        }, (err, result) => {
 
                             if (err) {
                                 logger.log(err);
-                            } else {
-                                convo.say(data.message);
                             }
-                        });
-                    });
-                } else {
-                    const channels = await controller.storage.channels.find({ team_id: data.teamId });
 
-                    if (channels && channels.length > 0) {
-                        bot.say({ text: data.message, channel: channels[0].id });
+                            if (!result) {
+                                return logger.log('user not found for email:', data.userEmail);
+                            }
+
+                            bot.startPrivateConversation({ user: result.user.id }, (err, convo) => {
+
+                                if (err) {
+                                    logger.log(err);
+                                } else {
+                                    convo.say(data.message);
+                                }
+                            });
+                        });
+                    } else {
+                        const channels = await controller.storage.channels.find({ team_id: data.teamId });
+
+                        if (channels && channels.length > 0) {
+                            bot.say({ text: data.message, channel: channels[0].id });
+                        }
                     }
                 }
-            }
+            });
         } catch (err) {
             logger.log(err);
         }
