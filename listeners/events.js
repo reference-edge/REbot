@@ -154,11 +154,11 @@ module.exports = controller => {
         });
     });
 
-    controller.on('post-message', async messages => {
+    controller.on('post-message', messages => {
 
-        try {
+        messages.forEach(async data => {
 
-            messages.forEach(data => {
+            try {
 
                 if (data.teamId) {
                     const team = await controller.storage.teams.get(data.teamId);
@@ -180,7 +180,7 @@ module.exports = controller => {
                             }
 
                             if (!result) {
-                                return logger.log('user not found for email:', data.userEmail);
+                                return logger.log('user not found in team ' + data.teamId + ' for email:', data.userEmail);
                             }
 
                             bot.startPrivateConversation({ user: result.user.id }, (err, convo) => {
@@ -200,9 +200,9 @@ module.exports = controller => {
                         }
                     }
                 }
-            });
-        } catch (err) {
-            logger.log(err);
-        }
+            } catch (err) {
+                logger.log(err);
+            }
+        });
     });
 }
