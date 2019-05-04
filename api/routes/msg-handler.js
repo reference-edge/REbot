@@ -6,10 +6,15 @@ module.exports = (app, controller) => {
     app.post('/post-message', async (req, res) => {
 
         try {
-            if (!req.body.teamId) {
+            let filteredMessages = req.body.filter(msg => {
+                return (msg.teamId == null)
+            });
+
+            if (filteredMessages.length > 0) {
                 return res.status(400).json({ ok: false, msg: 'team id is required' });
             }
-            const isTeamMigrating = await checkTeamMigration(req.body.teamId, controller);
+            // const isTeamMigrating = await checkTeamMigration(req.body.teamId, controller);
+            const isTeamMigrating = false;
 
             if (!isTeamMigrating) {
                 // to get message, teamId, userEmail/channelId and orgId in req body
