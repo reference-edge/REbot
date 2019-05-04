@@ -154,50 +154,56 @@ module.exports = controller => {
         });
     });
 
-    controller.on('post-message', messages => {
+    controller.on('post-message', reqBody => {
 
-        messages.forEach(async data => {
+        reqBody.messages.forEach(async msg => {
 
             try {
 
-                if (data.teamId) {
-                    const team = await controller.storage.teams.get(data.teamId);
+                if (reqBody.teamId) {
+                    const team = await controller.storage.teams.get(msg.teamId);
 
                     if (!team) {
-                        return logger.log('team not found for id:', data.teamId);
+                        return logger.log('team not found for id:', reqBody.teamId);
                     }
-                    const bot = controller.spawn(team.bot);
+                    const isTeamMigrating = await checkTeamMigration(reqBody.teamId, controller);
 
-                    if (data.userEmail) {
+                    if (!isTeamMigrating) {
+                        const bot = controller.spawn(team.bot);
 
-                        bot.api.users.lookupByEmail({
-                            token: team.bot.token,
-                            email: data.userEmail
-                        }, (err, result) => {
+                        if (msg.userEmail) {
 
-                            if (err) {
-                                logger.log(err);
-                            }
-
-                            if (!result) {
-                                return logger.log('user not found in team ' + data.teamId + ' for email:', data.userEmail);
-                            }
-
-                            bot.startPrivateConversation({ user: result.user.id }, (err, convo) => {
+                            bot.api.users.lookupByEmail({
+                                token: team.bot.token,
+                                email: msg.userEmail
+                            }, (err, result) => {
 
                                 if (err) {
                                     logger.log(err);
-                                } else {
-                                    convo.say(data.message);
                                 }
-                            });
-                        });
-                    } else {
-                        const channels = await controller.storage.channels.find({ team_id: data.teamId });
 
-                        if (channels && channels.length > 0) {
-                            bot.say({ text: data.message, channel: channels[0].id });
+                                if (!result) {
+                                    return logger.log('user not found in team ' + reqBody.teamId + ' for email:', msg.userEmail);
+                                }
+
+                                bot.startPrivateConversation({ user: result.user.id }, (err, convo) => {
+
+                                    if (err) {
+                                        logger.log(err);
+                                    } else {
+                                        convo.say(msg.text);
+                                    }
+                                });
+                            });
+                        } else {
+                            const channels = await controller.storage.channels.find({ team_id: reqBody.teamId });
+
+                            if (channels && channels.length > 0) {
+                                bot.say({ text: msg.text, channel: channels[0].id });
+                            }
                         }
+                    } else {
+                        logger.log(`cannot post message for team id ${reqBody.teamId}, this team is in migration `);
                     }
                 }
             } catch (err) {
