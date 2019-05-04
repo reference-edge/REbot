@@ -161,7 +161,7 @@ module.exports = controller => {
             try {
 
                 if (reqBody.teamId) {
-                    const team = await controller.storage.teams.get(msg.teamId);
+                    const team = await controller.storage.teams.get(reqBody.teamId);
 
                     if (!team) {
                         return logger.log('team not found for id:', reqBody.teamId);
