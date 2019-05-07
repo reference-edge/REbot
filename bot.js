@@ -1,6 +1,6 @@
 const Botkit = require('botkit');
 const mongoProvider = require('./db/mongo-provider')({
-    mongoUri: `mongodb+srv://gaurav-saini:${process.env.MONGO_PW}@slackedge-test-skasp.mongodb.net/${process.env.DB_NAME}?retryWrites=true`
+    mongoUri: process.env.MONGO_CONNECTION_STRING
 });
 
 const eventListeners = require('./listeners/events');
