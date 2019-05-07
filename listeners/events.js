@@ -7,8 +7,6 @@ const { checkTeamMigration } = require('./middleware/migration-filter');
 module.exports = controller => {
 
     controller.on('grid_migration_started', async (ctrl, event) => {
-        console.dir(ctrl);
-        console.dir(event);
 
         try {
             let team = await controller.storage.teams.get(event.team_id);
@@ -23,8 +21,6 @@ module.exports = controller => {
     });
 
     controller.on('grid_migration_finished', async (ctrl, event) => {
-        console.dir(ctrl);
-        console.dir(event);
 
         try {
             let team = await controller.storage.teams.get(event.team_id);
@@ -73,10 +69,13 @@ module.exports = controller => {
             if (err) {
                 logger.log(err);
             } else {
-                convo.say('I am a bot. I have joined your workspace. Just message me if you have any queries.\n'
-                    + 'I have created a public channel for the CRP Team. '
-                    + 'All updates concerning the Customer Reference Team will be posted in this channel. '
-                    + 'You should add the members of the Customer Reference Team and me to this channel to receive updates.');
+                convo.say('Hello, I\'m REbot. I have joined your workspace.\n'
+                + 'I\'m here to help deliver messages from ReferenceEdge to your Customer Reference Program (CRP) team and individual users.\n'
+                + 'I have created a public channel for the CRP Team. All updates concerning the Customer Reference Team '
+                + 'will be posted in this channel. You should add the members of the Customer Reference Team and me, REbot, '
+                + 'to this channel to ensure they receive updates. You can do this by @mentioning them / me, like this: @REbot.'
+                + 'To connect your workspace to ReferenceEdge you can type \'connect to a salesforce instance\'.'
+                + 'Just message me if you have any other queries.');
             }
         });
     });
@@ -160,52 +159,49 @@ module.exports = controller => {
         reqBody.messages.forEach(async msg => {
 
             try {
+                const team = await controller.storage.teams.get(reqBody.teamId);
 
-                if (reqBody.teamId) {
-                    const team = await controller.storage.teams.get(reqBody.teamId);
+                if (!team) {
+                    return logger.log('team not found for id:', reqBody.teamId);
+                }
+                const isTeamMigrating = await checkTeamMigration(reqBody.teamId, controller);
 
-                    if (!team) {
-                        return logger.log('team not found for id:', reqBody.teamId);
-                    }
-                    const isTeamMigrating = await checkTeamMigration(reqBody.teamId, controller);
+                if (!isTeamMigrating) {
+                    const bot = controller.spawn(team.bot);
 
-                    if (!isTeamMigrating) {
-                        const bot = controller.spawn(team.bot);
+                    if (msg.userEmail) {
 
-                        if (msg.userEmail) {
+                        bot.api.users.lookupByEmail({
+                            token: team.bot.token,
+                            email: msg.userEmail
+                        }, (err, result) => {
 
-                            bot.api.users.lookupByEmail({
-                                token: team.bot.token,
-                                email: msg.userEmail
-                            }, (err, result) => {
+                            if (err) {
+                                logger.log(err);
+                            }
+
+                            if (!result) {
+                                return logger.log('user not found in team ' + reqBody.teamId + ' for email:', msg.userEmail);
+                            }
+
+                            bot.startPrivateConversation({ user: result.user.id }, (err, convo) => {
 
                                 if (err) {
                                     logger.log(err);
+                                } else {
+                                    convo.say(msg.text);
                                 }
-
-                                if (!result) {
-                                    return logger.log('user not found in team ' + reqBody.teamId + ' for email:', msg.userEmail);
-                                }
-
-                                bot.startPrivateConversation({ user: result.user.id }, (err, convo) => {
-
-                                    if (err) {
-                                        logger.log(err);
-                                    } else {
-                                        convo.say(msg.text);
-                                    }
-                                });
                             });
-                        } else {
-                            const channels = await controller.storage.channels.find({ team_id: reqBody.teamId });
-
-                            if (channels && channels.length > 0) {
-                                bot.say({ text: msg.text, channel: channels[0].id });
-                            }
-                        }
+                        });
                     } else {
-                        logger.log(`cannot post message for team id ${reqBody.teamId}, this team is in migration `);
+                        const channels = await controller.storage.channels.find({ team_id: reqBody.teamId });
+
+                        if (channels && channels.length > 0) {
+                            bot.say({ text: msg.text, channel: channels[0].id });
+                        }
                     }
+                } else {
+                    logger.log(`cannot post message for team id ${reqBody.teamId}, this team is in migration `);
                 }
             } catch (err) {
                 logger.log(err);

@@ -10,7 +10,7 @@ module.exports = controller => {
             const helpUrl = `${process.env.APP_BASE_URL}/interactions`;
 
             if (message.text.includes('hello')) {
-                bot.reply(message, `hi, you can invite me to the channel for Customer Reference Team to receive updates!`);
+                bot.reply(message, `Hi, you can invite me to the channel for Customer Reference Team to receive updates!`);
             } else if (message.text == 'connect to a salesforce instance') {
                 let existingConn = await connFactory.getConnection(message.team_id, controller);
 
@@ -21,7 +21,7 @@ module.exports = controller => {
 
                     bot.startConversation(message, (err, convo) => {
                         convo.addQuestion(
-                            `You're already connected to a Salesforce org. Are you sure you want to disconnect from it and connect to another org?`,
+                            `You are already connected to a Salesforce instance. Are you sure you want to disconnect from it and connect to another instance?`,
                             [{
                                 pattern: bot.utterances.yes,
                                 callback: async (response, convo) => {
@@ -48,7 +48,7 @@ module.exports = controller => {
                             {
                                 pattern: bot.utterances.no,
                                 callback: (response, convo) => {
-                                    convo.say(`Ok, You're still connected to your old org.`);
+                                    convo.say(`Ok, You are still connected to your old Salesforce instance.`);
                                     convo.next();
                                 }
                             },
