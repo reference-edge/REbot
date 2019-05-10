@@ -100,7 +100,6 @@ module.exports = {
                 return conn;
             }
             conn = new jsforce.Connection({ oauth2: oauth2 });
-
             const userInfo = await conn.authorize(authCode);
 
             conn.on('refresh', async (accessToken, res) => {
