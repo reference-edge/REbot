@@ -4,10 +4,6 @@
 module.exports = (app, controller) => {
 
     app.get('/', (req, res) => {
-        res.redirect('/index.html');
-    });
-
-    app.get('/interactions', (req, res) => {
-        res.redirect('/interactions.html');
+        res.redirect('http://www.point-of-reference.com/slack-referenceedge-integration/');
     });
 }

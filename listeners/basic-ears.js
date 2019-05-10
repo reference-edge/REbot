@@ -7,7 +7,7 @@ module.exports = controller => {
     controller.hears('', 'direct_message,direct_mention', async (bot, message) => {
 
         try {
-            const helpUrl = `${process.env.APP_BASE_URL}/interactions`;
+            const supportUrl = `https://www.point-of-reference.com/contact/`;
 
             if (message.text.includes('hello')) {
                 bot.reply(message, `Hi, you can invite me to the channel for Customer Reference Team to receive updates!`);
@@ -65,9 +65,9 @@ module.exports = controller => {
             } else if (message.text.includes('help')) {
                 bot.reply(message, `I can connect you to a salesforce instance.
 Just type 'connect to a salesforce instance' to get started.
-Please visit the <${helpUrl}|Help Page> for more information.`);
+Please visit the <${supportUrl}|Support Page> if you have any further questions.`);
             } else {
-                bot.reply(message, `Sorry, I didn't understand that. Please visit the <${helpUrl}|Help Page> for more information.`);
+                bot.reply(message, `Sorry, I didn't understand that.`);
             }
         } catch (err) {
             logger.log(err);

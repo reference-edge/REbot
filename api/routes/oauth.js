@@ -9,7 +9,7 @@ module.exports = (app, controller) => {
             let code = req.query.code;
 
             if (!req.query.state || process.env.STATE != req.query.state) {
-                // return res.status(401).json({ ok: false, message: 'auth failed' });
+                return res.redirect('/auth-failed.html');
             }
             let botInstance = controller.spawn({});
 
