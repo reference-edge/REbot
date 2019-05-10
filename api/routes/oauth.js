@@ -8,8 +8,12 @@ module.exports = (app, controller) => {
         authorize: (req, res) => {
             let code = req.query.code;
 
-            if (!req.query.state || process.env.STATE != req.query.state) {
-                return res.redirect('/auth-failed.html');
+            if (!req.query.state) {
+                return res.redirect('/auth-failed.html?error=missing_state_param');
+            }
+
+            if (process.env.STATE != req.query.state) {
+                return res.redirect('/auth-failed.html?error=invalid_state_param');
             }
             let botInstance = controller.spawn({});
 
