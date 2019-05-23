@@ -180,7 +180,7 @@ module.exports = controller => {
                             }, (err, result) => {
 
                                 if (err) {
-                                    logger.log(err);
+                                    return logger.log(err, `team id - ${teams[index].id}`, `user email - ${msg.userEmail}`);
                                 }
 
                                 if (!result) {

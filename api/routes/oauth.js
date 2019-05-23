@@ -38,7 +38,7 @@ module.exports = (app, controller) => {
                     }
                     auth.identity = identity;
                     controller.trigger('oauth_success', [auth]);
-                    res.redirect(auth.identity.url);
+                    res.redirect(`https://slack.com/app_redirect?app=${process.env.SLACK_APP_ID}`);
                 });
             });
         }
