@@ -18,7 +18,8 @@ const mongoProvider = require('./db/mongo-provider')({
 });
 const authRouter = require('./api/routes/oauth');
 const sfAuthRouter = require('./api/routes/sfauth');
-const sfMsgRouter = require('./api/routes/msg-handler');
+const sfMsgRouter = require('./api/routes/msg-handler'); 
+const viewsRouter = require('./api/routes/views');
 
 const adapter = new SlackAdapter({
     clientSigningSecret: process.env.SLACK_SIGNING_SECRET,
@@ -70,6 +71,7 @@ controller.ready(() => {
     authRouter(controller);
     sfAuthRouter(controller);
     sfMsgRouter(controller);
+    viewsRouter(controller);
 });
 
 async function getTokenForTeam(teamId) {

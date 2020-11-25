@@ -15,10 +15,10 @@ app.use(express.static('public'));
 
 app.use(corsMiddleware);
 
-let routersDir = require('path').join(__dirname, 'api/routes');
+/* let routersDir = require('path').join(__dirname, 'api/routes');
 fs.readdirSync(routersDir).forEach(file => {
     require('./api/routes/' + file)(app, botController);
-});
+}); */
 
 app.use(errorHandlerMiddleware.notFound);
 app.use(errorHandlerMiddleware.internalError);

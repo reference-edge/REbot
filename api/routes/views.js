@@ -3,7 +3,7 @@
 
 module.exports = (app, controller) => {
 
-    app.get('/', (req, res) => {
+    controller.webserver.get('/', (req, res) => {
         res.redirect('http://www.point-of-reference.com/slack-referenceedge-integration/');
     });
 }
