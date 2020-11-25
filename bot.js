@@ -28,7 +28,6 @@ const adapter = new SlackAdapter({
     scopes: [
     'calls:read',
     'channels:history',
-    'channels:write', 
     'team:read', 
     'users:read',
     'users.profile:read', 
