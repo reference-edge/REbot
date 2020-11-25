@@ -1,36 +1,39 @@
 {
-  "name": "rebot",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/reference-edge/REbot.git"
-  },
-  "keywords": [
-    "slack",
-    "bot"
-  ],
-  "author": "Point of Reference",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/reference-edge/REbot/issues"
-  },
-  "homepage": "https://github.com/reference-edge/REbot#readme",
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "botkit": "^0.7.4",
-    "dotenv": "^7.0.0",
-    "express": "^4.16.4",
-    "jsforce": "^1.9.1",
-    "mongoose": "^5.5.5"
-  },
-  "engines": {
-    "node": "10.15.1",
-    "npm": "6.4.1"
+    "name": "rebot",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "start": "node index.js"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/reference-edge/REbot.git"
+    },
+    "keywords": [
+      "slack",
+      "bot"
+    ],
+    "author": "Point of Reference",
+    "license": "ISC",
+    "bugs": {
+      "url": "https://github.com/reference-edge/REbot/issues"
+    },
+    "homepage": "https://github.com/reference-edge/REbot#readme",
+    "dependencies": {
+      "body-parser": "^1.19.0",
+      "express": "^4.16.4",
+      "mongoose": "^5.6.8",
+      "botbuilder-adapter-slack": "^1.0.4",
+      "botkit": "^4.5.0",
+      "botkit-middleware-dialogflow": "^2.1.0",
+      "dotenv": "^8.0.0",
+      "jsforce": "^1.9.3"
+    },
+    "engines": {
+      "node": "10.15.1",
+      "npm": "6.4.1"
+    }
   }
-}
+  

@@ -6,14 +6,14 @@ const { checkTeamMigration } = require('./middleware/migration-filter');
 
 module.exports = controller => {
 
-    controller.on('grid_migration_started', async (ctrl, event) => {
+    /* controller.on('grid_migration_started', async (ctrl, event) => {
 
         try {
-            let team = await controller.storage.teams.get(event.team_id);
+            let team = await controller.plugins.database.teams.get(event.team_id);
 
             if (team) {
                 team.is_migrating = true;
-                controller.storage.teams.save(team);
+                controller.plugins.database.teams.save(team);
             }
         } catch (err) {
             logger.log(err);
@@ -23,11 +23,11 @@ module.exports = controller => {
     controller.on('grid_migration_finished', async (ctrl, event) => {
 
         try {
-            let team = await controller.storage.teams.get(event.team_id);
+            let team = await controller.plugins.database.teams.get(event.team_id);
 
             if (team) {
                 team.is_migrating = false;
-                controller.storage.teams.save(team);
+                controller.plugins.database.teams.save(team);
             }
         } catch (err) {
             logger.log(err);
@@ -211,5 +211,5 @@ module.exports = controller => {
                 logger.log(err);
             }
         });
-    });
+    }); */
 }

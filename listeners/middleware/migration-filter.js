@@ -1,9 +1,9 @@
-const logger = require('../../common/logger');
+const logger = require('../../util/logger');
 
 const checkTeamMigration = async (teamId, controller) => {
 
     try {
-        const team = await controller.storage.teams.get(teamId);
+        const team = await controller.plugins.database.teams.get(teamId);
 
         if (!team) {
             return false;
