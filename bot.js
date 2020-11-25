@@ -17,7 +17,7 @@ const mongoProvider = require('./db/mongo-provider')({
     mongoUri: process.env.MONGO_CONNECTION_STRING
 });
 const authRouter = require('./api/routes/oauth');
-const sfAuthRouter = require('./api/routes/sf-oauth');
+const sfAuthRouter = require('./api/routes/sfauth');
 const sfMsgRouter = require('./api/routes/msg-handler');
 
 const adapter = new SlackAdapter({
