@@ -1,4 +1,4 @@
-const logger = require('../../util/logger');
+const logger = require('../../common/logger');
 
 const checkTeamMigration = async (teamId, controller) => {
 
