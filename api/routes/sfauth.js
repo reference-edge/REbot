@@ -3,7 +3,7 @@ const connFactory = require('../../util/connection-factory');
 const { saveTeamId } = require('../../util/refedge');
 const logger = require('../../common/logger');
 
-module.exports = (app, controller) => {
+module.exports = controller => {
 
     controller.webserver.get('/sfauth/callback', async (req, res) => {
 

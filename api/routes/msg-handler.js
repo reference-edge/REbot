@@ -1,7 +1,7 @@
 const logger = require('../../common/logger');
 const { checkTeamMigration } = require('../../listeners/middleware/migration-filter');
 
-module.exports = (app, controller) => {
+module.exports = controller => {
 
     controller.webserver.post('/post-message', async (req, res) => {
 
