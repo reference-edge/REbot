@@ -7,7 +7,8 @@ module.exports = (app, controller) => {
         },
         authorize: (req, res) => {
             let code = req.query.code;
-
+            console.log('######state param', req.query.state);
+            console.log('######env state param', process.env.STATE);
             if (!req.query.state) {
                 return res.redirect('/auth-failed.html?error=missing_state_param');
             }
@@ -22,7 +23,7 @@ module.exports = (app, controller) => {
                 client_secret: controller.config.clientSecret,
                 code: code
             };
-
+            //##1
             botInstance.api.oauth.access(options, (err, auth) => {
 
                 if (err) {
