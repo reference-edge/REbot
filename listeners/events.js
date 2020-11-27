@@ -83,7 +83,7 @@ module.exports = controller => {
     controller.on('create_channel', (auth, bot) => {
         console.log('bot@@@@');
         console.dir(bot);
-        bot.api.channels.create({
+        bot.api.conversations.create({
             token: auth.access_token,
             name: 'crp_team'
         }, (err, result) => {
