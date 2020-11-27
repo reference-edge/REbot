@@ -121,6 +121,7 @@ module.exports = controller => {
             }
 
             team.bot = {
+                //##2
                 token: auth.bot.bot_access_token,
                 user_id: auth.bot.bot_user_id,
                 createdBy: auth.identity.user_id,
@@ -155,7 +156,8 @@ module.exports = controller => {
     });
 
     controller.on('post-message', reqBody => {
-
+        console.log('in event js');;
+        console.dir(reqBody);
         reqBody.messages.forEach(async msg => {
 
             try {

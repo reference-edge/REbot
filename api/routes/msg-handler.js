@@ -6,7 +6,8 @@ module.exports = (app, controller) => {
     app.post('/post-message', async (req, res) => {
 
         try {
-
+            console.log('in msg-handler class');
+            console.dir(req);
             if (!req.body.teamId) {
                 return res.status(400).json({ ok: false, msg: 'team id is required' });
             }
