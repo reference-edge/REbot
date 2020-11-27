@@ -9,13 +9,13 @@ module.exports = (app, controller) => {
             let code = req.query.code;
             console.log('######state param', req.query.state);
             console.log('######env state param', process.env.STATE);
-            if (!req.query.state) {
+            /* if (!req.query.state) {
                 return res.redirect('/auth-failed.html?error=missing_state_param');
             }
 
             if (process.env.STATE != req.query.state) {
                 return res.redirect('/auth-failed.html?error=invalid_state_param');
-            }
+            } */
             let botInstance = controller.spawn({});
 
             let options = {
