@@ -24,7 +24,8 @@ module.exports = (app, controller) => {
                 code: code
             };
             //##1
-            botInstance.api.oauth.access(options, (err, auth) => {
+            //Migrate to OAuth v2
+            botInstance.api.oauth.v2.access(options, (err, auth) => {
 
                 if (err) {
                     res.status(401);

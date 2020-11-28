@@ -123,8 +123,11 @@ module.exports = controller => {
 
             team.bot = {
                 //##2
-                token: auth.bot.bot_access_token,
-                user_id: auth.bot.bot_user_id,
+                //token: auth.bot.bot_access_token,
+                //user_id: auth.bot.bot_user_id,
+                //Add support of oauth v2 
+                token: auth.access_token,
+                user_id: auth.bot_user_id,
                 createdBy: auth.identity.user_id,
                 app_token: auth.access_token,
             };
