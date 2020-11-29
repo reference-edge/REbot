@@ -17,7 +17,8 @@ module.exports = (app, controller) => {
                 return res.redirect('/auth-failed.html?error=invalid_state_param');
             } */
             let botInstance = controller.spawn({});
-
+            console.log('!-----------botinstance-----------!');
+            console.dir(botInstance);
             let options = {
                 client_id: controller.config.clientId,
                 client_secret: controller.config.clientSecret,

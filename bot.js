@@ -21,10 +21,13 @@ let botCfg = {
         'users:read.email',
         'users:write', 'team:read', 'users:read', 'users:read.email', 'channels:write'],
     storage: mongoProvider,
-    clientSigningSecret: process.env.SLACK_SIGNING_SECRET
+    clientSigningSecret: process.env.SLACK_SIGNING_SECRET,
+    oauthVersion = 'v2'
 };
 
 let controller = Botkit.slackbot(botCfg);
+console.log('!-------------Controller value SlackBot--------------!');
+console.dir(controller);
 controller.startTicking();
 controller.middleware.receive.use(getFilterMiddleware(controller));
 
