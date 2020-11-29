@@ -22,7 +22,7 @@ let botCfg = {
         'users:write', 'team:read', 'users:read', 'users:read.email', 'channels:write'],
     storage: mongoProvider,
     clientSigningSecret: process.env.SLACK_SIGNING_SECRET,
-    oauthVersion = 'v2'
+    oauthVersion : 'v2'
 };
 
 let controller = Botkit.slackbot(botCfg);
