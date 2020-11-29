@@ -106,7 +106,8 @@ module.exports = controller => {
     });
 
     controller.on('oauth_success', auth => {
-
+        console.dir('!--------------oauth_success----------------!');
+        console.log(auth);
         controller.storage.teams.get(auth.identity.team_id, (err, team) => {
             let isNew = false;
 
