@@ -2,6 +2,14 @@
 const connFactory = require('../util/connection-factory');
 const logger = require('../common/logger');
 
+controller.on(
+    'direct_message',
+    async (bot, message) => {
+        console.log('-------direct_message-----');
+        console.dir(message);
+    }
+);
+
 module.exports = controller => {
 
     controller.hears('', 'direct_message,direct_mention', async (bot, message) => {
