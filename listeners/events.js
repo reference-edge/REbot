@@ -67,6 +67,7 @@ module.exports = controller => {
         bot.startPrivateConversation({ user: bot.config.createdBy }, (err, convo) => {
 
             if (err) {
+                console.log('before onboarding error ......');
                 logger.log(err);
             } else {
                 convo.say('Hello, I\'m REbot. I have joined your workspace.\n'
@@ -81,8 +82,9 @@ module.exports = controller => {
     });
 
     controller.on('create_channel', (auth, bot) => {
-        console.log('bot@@@@');
-        console.dir(bot);
+        console.log('auth@@@@');
+        console.dir(auth.access_token);
+
         bot.api.conversations.create({
             token: auth.access_token,
             name: 'crp_team'
