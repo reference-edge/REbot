@@ -6,14 +6,6 @@ const logger = require('../common/logger');
 
 module.exports = controller => {
 
-    controller.on(
-        'direct_message',
-        async (bot, message) => {
-            console.log('-------direct_message-----');
-            console.dir(message);
-        }
-    );
-
     controller.hears('', 'direct_message,direct_mention', async (bot, message) => {
         console.log('!-----------basic ears direct----------!');
         try {
