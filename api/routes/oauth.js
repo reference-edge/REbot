@@ -24,7 +24,6 @@ module.exports = (app, controller) => {
             //Migrate to OAuth v2
             botInstance.api.oauth.v2.access(options, (err, auth) => {
                 console.log('!----- inside function ---------!');
-                console.dir(auth);
                 if (err) {
                     res.status(401);
                     return res.redirect('/auth-failed.html');

@@ -67,7 +67,6 @@ module.exports = controller => {
         bot.startPrivateConversation({ user: bot.config.createdBy }, (err, convo) => {
 
             if (err) {
-                console.log('before onboarding error ......');
                 logger.log(err);
             } else {
                 convo.say('Hello, I\'m REbot. I have joined your workspace.\n'
@@ -121,7 +120,7 @@ module.exports = controller => {
             }
 
             team.bot = {
-                //##2
+                //##old way of getting token
                 //token: auth.bot.bot_access_token,
                 //user_id: auth.bot.bot_user_id,
                 //Add support of oauth v2 
