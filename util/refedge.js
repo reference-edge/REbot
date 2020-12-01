@@ -4,8 +4,7 @@ const logger = require('../common/logger');
 
 module.exports = {
     saveTeamId: (conn, teamData) => {
-        //////####### only for DEV purpose, do not push and revert back to refedge
-        conn.apex.post('/PORDEV/rebot', teamData, (err, res) => {
+        conn.apex.post('/refedge/rebot', teamData, (err, res) => {
 
             if (err) {
                 logger.log(err);

@@ -7,8 +7,6 @@ module.exports = (app, controller) => {
         },
         authorize: (req, res) => {
             let code = req.query.code;
-            console.log('######state param', req.query.state);
-            console.log('######env state param', process.env.STATE);
             /* if (!req.query.state) {
                 return res.redirect('/auth-failed.html?error=missing_state_param');
             }
@@ -17,8 +15,6 @@ module.exports = (app, controller) => {
                 return res.redirect('/auth-failed.html?error=invalid_state_param');
             } */
             let botInstance = controller.spawn({});
-            console.log('!-----------botinstance-----------!');
-            console.dir(botInstance);
             let options = {
                 client_id: controller.config.clientId,
                 client_secret: controller.config.clientSecret,

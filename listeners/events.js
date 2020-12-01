@@ -82,9 +82,7 @@ module.exports = controller => {
     });
 
     controller.on('create_channel', (auth, bot) => {
-        console.log('auth@@@@');
-        console.dir(auth.access_token);
-
+        
         bot.api.conversations.create({
             token: auth.access_token,
             name: 'crp_team'
@@ -108,8 +106,6 @@ module.exports = controller => {
     });
 
     controller.on('oauth_success', auth => {
-        console.dir('!--------------oauth_success----------------!');
-        console.log(auth);
         controller.storage.teams.get(auth.identity.team_id, (err, team) => {
             let isNew = false;
 
@@ -164,7 +160,6 @@ module.exports = controller => {
 
     controller.on('post-message', reqBody => {
         console.log('in event js');;
-        console.dir(reqBody);
         reqBody.messages.forEach(async msg => {
 
             try {

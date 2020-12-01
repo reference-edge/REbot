@@ -19,15 +19,29 @@ let botCfg = {
         'team:read',
         'users:read',
         'users:read.email',
-        'users:write', 'team:read', 'users:read', 'users:read.email', 'channels:write'],
+        'users:write', 
+        'channels:write',
+        'channels:history',
+        'im:read',
+        'im:write',
+        'users.profile:read',
+        'im:history',
+        'mpim:read', 
+        'mpim:write', 
+        'groups:read', 
+        'groups:write', 
+        'groups:history',
+        'chat:write',
+        'app_mentions:read',
+        'commands'
+
+    ],
     storage: mongoProvider,
     clientSigningSecret: process.env.SLACK_SIGNING_SECRET,
     oauthVersion : 'v2'
 };
 
 let controller = Botkit.slackbot(botCfg);
-console.log('!-------------Controller value SlackBot--------------!');
-console.dir(controller);
 controller.startTicking();
 controller.middleware.receive.use(getFilterMiddleware(controller));
 
