@@ -7,7 +7,6 @@ module.exports = (app, controller) => {
         },
         authorize: (req, res) => {
             let code = req.query.code;
-
             if (!req.query.state) {
                 return res.redirect('/auth-failed.html?error=missing_state_param');
             }
@@ -16,15 +15,15 @@ module.exports = (app, controller) => {
                 return res.redirect('/auth-failed.html?error=invalid_state_param');
             }
             let botInstance = controller.spawn({});
-
             let options = {
                 client_id: controller.config.clientId,
                 client_secret: controller.config.clientSecret,
                 code: code
             };
-
-            botInstance.api.oauth.access(options, (err, auth) => {
-
+            //##1
+            //Migrate to OAuth v2
+            botInstance.api.oauth.v2.access(options, (err, auth) => {
+                console.log('!----- inside function ---------!');
                 if (err) {
                     res.status(401);
                     return res.redirect('/auth-failed.html');

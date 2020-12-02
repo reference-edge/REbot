@@ -81,8 +81,8 @@ module.exports = controller => {
     });
 
     controller.on('create_channel', (auth, bot) => {
-
-        bot.api.channels.create({
+        
+        bot.api.conversations.create({
             token: auth.access_token,
             name: 'crp_team'
         }, (err, result) => {
@@ -105,7 +105,6 @@ module.exports = controller => {
     });
 
     controller.on('oauth_success', auth => {
-
         controller.storage.teams.get(auth.identity.team_id, (err, team) => {
             let isNew = false;
 
@@ -121,8 +120,12 @@ module.exports = controller => {
             }
 
             team.bot = {
-                token: auth.bot.bot_access_token,
-                user_id: auth.bot.bot_user_id,
+                //##old way of getting token
+                //token: auth.bot.bot_access_token,
+                //user_id: auth.bot.bot_user_id,
+                //Add support of oauth v2 
+                token: auth.access_token,
+                user_id: auth.bot_user_id,
                 createdBy: auth.identity.user_id,
                 app_token: auth.access_token,
             };
@@ -155,7 +158,7 @@ module.exports = controller => {
     });
 
     controller.on('post-message', reqBody => {
-
+        console.log('in event js');;
         reqBody.messages.forEach(async msg => {
 
             try {
