@@ -1,4 +1,3 @@
-
 const jsforce = require('jsforce');
 const { postForm } = require('../common/request-util');
 const logger = require('../common/logger');
@@ -13,7 +12,7 @@ const oauth2 = new jsforce.OAuth2({
 async function findOrgByTeamId(teamId, botController) {
 
     try {
-        let orgs = await botController.storage.orgs.get(teamId);
+        let orgs = await botController.plugins.database.orgs.get(teamId);
         return orgs;
     } catch (err) {
         throw err;
@@ -50,10 +49,10 @@ async function getExistingConnection(teamId, botController) {
     }
 }
 
-function saveOrg(data, botController) {
+async function saveOrg(data, botController) {
 
     try {
-        botController.storage.orgs.save(data);
+        await botController.plugins.database.orgs.save(data);
     } catch (err) {
         throw err;
     }
@@ -62,7 +61,7 @@ function saveOrg(data, botController) {
 async function deleteOrg(teamId, botController) {
 
     try {
-        let delResult = await botController.storage.orgs.delete(teamId);
+        await botController.plugins.database.orgs.delete(teamId);
         return 'success';
     } catch (err) {
         throw err;

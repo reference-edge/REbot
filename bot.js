@@ -2,6 +2,9 @@ require('dotenv').config();
 
 const { Botkit } = require('botkit');
 const { SlackAdapter, SlackMessageTypeMiddleware, SlackEventMiddleware } = require('botbuilder-adapter-slack');
+const { getFilterMiddleware } = require('./listeners/middleware/migration-filter');
+const errorHandlerMiddleware = require('./api/middleware/error-handler');
+const corsMiddleware = require('./api/middleware/cors');
 const projectId = process.env.PROJECT_ID;
 const client_email = process.env.CLIENT_EMAIL;
 const private_key = process.env.PRIVATE_KEY.replace(/\\n/gm, '\n');
@@ -26,7 +29,20 @@ const adapter = new SlackAdapter({
     clientId: process.env.SLACK_CLIENT_ID,
     clientSecret: process.env.SLACK_CLIENT_SECRET,
     scopes: [
-    'calls:read',
+    'channels:history',
+    'channels:join',
+    'channels:manage',
+    'channels:read',
+    'chat:write',
+    'team:read', 
+    'users:read',
+    'users:read.email', 
+    'im:history',
+    'im:write',
+    'incoming-webhook',
+    'commands',
+    'links:write'
+    /* 'calls:read',
     'channels:history',
     'team:read', 
     'users:read',
@@ -43,7 +59,7 @@ const adapter = new SlackAdapter({
     'mpim:read',
     'mpim:write',
     'reactions:read',
-    'users.profile:read'
+    'users.profile:read' */
     ],
     redirectUri: process.env.SLACK_REDIRECT_URI,
     getTokenForTeam: getTokenForTeam,
@@ -58,20 +74,23 @@ const controller = new Botkit({
     webhook_uri: '/slack/receive',
     adapter
 });
-
+controller.webserver.use(corsMiddleware);
 controller.addPluginExtension('database', mongoProvider);
 
 controller.middleware.receive.use(dialogflowMiddleware.receive);
+controller.middleware.receive.use(getFilterMiddleware);
+controller.publicFolder('', __dirname + '/public');
 
 controller.ready(() => {
     controller.loadModules(__dirname + '/dialogs');
     controller.loadModules(__dirname + '/listeners');
-    controller.loadModules(__dirname + '/public');
     console.log('----------------Ready-----------------');
     authRouter(controller);
     sfAuthRouter(controller);
     sfMsgRouter(controller);
     viewsRouter(controller);
+    controller.webserver.use(errorHandlerMiddleware.notFound);
+    controller.webserver.use(errorHandlerMiddleware.internalError);
 });
 
 async function getTokenForTeam(teamId) {

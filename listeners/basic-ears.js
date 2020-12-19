@@ -1,12 +1,14 @@
-
 const connFactory = require('../util/connection-factory');
 const logger = require('../common/logger');
 
+const { getRefTypes, getOpp, getOppfromName, getOppfromAcc, saveTeamId} = require('../util/refedge');
+
+const { checkTeamMigration } = require('../listeners/middleware/migration-filter');
+
 module.exports = controller => {
 
-    
-
-    controller.on('direct_message,direct_mention', async (bot, message) => {
+    controller.on('direct_message,direct_mention', 
+    async (bot, message) => {
 
         try {
             const supportUrl = `https://www.point-of-reference.com/contact/`;
@@ -87,26 +89,26 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
     controller.on('app_uninstalled', async (ctrl, event) => {
 
         try {
-        	const channels = await controller.plugins.database.channels.find({ team_id: event.team_id });
+        	const channels = await controller.plugins.database.channels.find({ team_id: event.team });
 
             if (channels && channels.length > 0) {
                 await controller.plugins.database.channels.delete(channels[0].id);
             }
             //controller.plugins.database.teams.delete(event.team_id); uncomment it if any issue.
-            const existingConn = await connFactory.getConnection(event.team_id, controller);
+            const existingConn = await connFactory.getConnection(event.team, controller);
             if (existingConn) {
-                let teamData = { removeTeam: event.team_id };
+                let teamData = { removeTeam: event.team };
                 saveTeamId(existingConn, teamData);
                 const revokeResult = await connFactory.revoke({
                     revokeUrl: existingConn.oauth2.revokeServiceUrl,
                     refreshToken: existingConn.refreshToken,
-                    teamId: event.team_id
+                    teamId: event.team
                 }, controller);
                 logger.log('delete org result:', revokeResult);
             }
-            controller.plugins.database.teams.delete(event.team_id);
+            await controller.plugins.database.teams.delete(event.team);
         } catch (err) {
-            console.log(err);
+        	logger.log(err);
         }
     });
 
@@ -116,38 +118,37 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
         console.dir(authData)
         
         try {
-            let existingTeam = await controller.plugins.database.teams.get(authData.team_id);
+            let existingTeam = await controller.plugins.database.teams.get(authData.team.id);
             let isNew = false;
 
             if (!existingTeam) {
                 isNew = true;
                 existingTeam = {
-                    id: authData.team_id,
-                    name: authData.team_name,
+                    id: authData.team.id,
+                    name: authData.team.name,
                     is_migrating: false
                 };
             }
             existingTeam.bot = {
                 token : authData.access_token,
-                user_id : authData.user_id,
-                created_by: authData.user_id
+                user_id : authData.bot_user_id,
+                created_by: authData.authed_user.id
             };
             await controller.plugins.database.teams.save(existingTeam);
             
 			if (isNew) {
-                let bot = await controller.spawn(authData.team_id);
-                
+                let bot = await controller.spawn(authData.team.id);
+                /*
                 bot.api.auth.test({}, (err, botAuth) => {
 
-                if (err) {
-                    logger.log('auth error:', err);
-                } else {
-                
-                    controller.trigger('create_channel', bot, authData);
-                	controller.trigger('onboard', bot, authData.user_id);
-                }
-            });
-                
+                  if (err) {
+                      logger.log('auth error:', err);
+                  } else {*/
+
+                      controller.trigger('create_channel', bot, authData);
+                      controller.trigger('onboard', bot, authData.authed_user.id);
+                  /*}
+            	});*/
                 
             }
         } catch (err) {
@@ -170,18 +171,18 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
     controller.on('create_channel', async (bot, authData) => {
         console.log('******************-----/create_channel/-----******************');
         try {
-            let result = await bot.api.channels.join({
+            let result = await bot.api.conversations.create({
                 token: authData.access_token,
-                name: '#crp_team'
+                name: 'crp_team'
             });
             const crpTeamChannel = {
                 id: result.channel.id,
                 name: result.channel.name,
-                team_id: authData.team_id
+                team_id: authData.team.id
             };
             console.log('-----/crpTeamChannel/-----');
             console.dir(crpTeamChannel);
-            controller.plugins.database.channels.save(crpTeamChannel);
+            await controller.plugins.database.channels.save(crpTeamChannel);
         } catch (err) {
             console.log('error setting up crp_team channel:', err);
         }

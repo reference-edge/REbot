@@ -18,12 +18,13 @@ module.exports = controller => {
             if (req.query.code && req.query.state) {
                 let conn = await connFactory.connect(req.query.code, controller, req.query.state);
                 let teamData = { addTeam: req.query.state };
-                saveTeamId(conn, teamData);
+                await saveTeamId(conn, teamData);
                 res.status(302);
                 res.redirect('/auth-success.html');
             }
         } catch (err) {
             logger.log('salesforce auth error:', err);
+            res.redirect('/auth-failed.html');
         }
     });
 }
