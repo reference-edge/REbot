@@ -15,7 +15,7 @@ module.exports = controller => {
     }, 'bad_response');
 
     convo.addMessage({
-        text: `click this link to connect\n<{{vars.authUrl}}|Connect to Salesforce>`,
+        text: `click this link to connect \n < {{&vars.authUrl}} | Connect to Salesforce >`,
         action: 'default'
     }, 'connect');
 
