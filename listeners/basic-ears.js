@@ -25,7 +25,7 @@ module.exports = controller => {
                         /* await controller.plugins.database.orgs.delete(message.team);
                         const authUrl = connFactory.getAuthUrl(message.team);
                         await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`); */
-                        await bot.beginDialog('sf_auth');
+                        bot.beginDialog('sf_auth');
                  }
             } else if (message.text.includes('help')) {
                 bot.reply(message, `I can connect you to a salesforce instance.
