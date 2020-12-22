@@ -16,7 +16,7 @@ module.exports = controller => {
 
     convo.addMessage({
         text: `click this link to connect\n<{{&vars.authUrl}}|Connect to Salesforce>`,
-        action: 'default'
+        action: 'complete'
     }, 'connect');
 
     convo.addQuestion('You are already connected to a Salesforce instance. Are you sure you want to disconnect from it and connect to another instance?', [
