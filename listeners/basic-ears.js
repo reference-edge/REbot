@@ -194,6 +194,8 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
         async (bot, message) => {
             try {
                 console.log('slash_command');
+                console.dir(bot);
+                console.dir(message);
                 let existingConn = await connFactory.getConnection(message.team, controller);
                 
                 if (existingConn) {
