@@ -194,88 +194,91 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
         async (bot, message) => {
             try {
                 console.log('slash_command');
-                console.dir(bot);
                 console.dir(message);
-                let existingConn = await connFactory.getConnection(message.team, controller);
-                
-                if (existingConn) {
-                    const userProfile = await bot.api.users.info({
-                        token : bot.api.token,
-                        user : message.user
-                    });
-                    console.log('.......userprofile ....', userProfile);
-                    console.log(userProfile.user.profile.email);
+                if(message.text && message.text.toLowerCase()  == 'help'){
+                    await bot.reply(message, `Welcome in the world of Slash commands........`);
+                }else{
+                    let existingConn = await connFactory.getConnection(message.team, controller);
                     
-                    const result = await bot.api.views.open({
-                        trigger_id: message.trigger_id,
-                        view: {
-                            "type": "modal",
-                            "notify_on_close" : true,
-                            "callback_id" : "actionSelectionView",
-                            "private_metadata" : userProfile.user.profile.email,
-                            "title": {
-                                "type": "plain_text",
-                                "text": "Reference Assistant",
-                                "emoji": true
-                            },
-                            "submit": {
-                                "type": "plain_text",
-                                "text": "Next",
-                                "emoji": true
-                            },
-                            "close": {
-                                "type": "plain_text",
-                                "text": "Cancel",
-                                "emoji": true
-                            },
-                            
-                            "blocks": [
-                                {
-                                    "type": "input",
-                                    "block_id": "accblock",
-                                    "element": {
-                                        "type": "radio_buttons",
-                                        "action_id": "searchid",
-                                        "options": [
-                                            {
-                                                "value": "account_search",
-                                                "text": {
-                                                    "type": "plain_text",
-                                                    "text": "Reference Account(s)"
-                                                }
-                                            },
-                                            {
-                                                "value": "content_search",
-                                                "text": {
-                                                    "type": "plain_text",
-                                                    "text": "Reference Content"
-                                                }
-                                            },
-                                            {
-                                                "value": "both",
-                                                "text": {
-                                                    "type": "plain_text",
-                                                    "text": "Both"
-                                                }
-                                            }
-                                        ]
-                                    },
-                                    "label": {
-                                        "type": "plain_text",
-                                        "text": "What do you need?",
-                                        "emoji": true
-                                    }
-                                }
-                            ]
-                        }
+                    if (existingConn) {
+                        const userProfile = await bot.api.users.info({
+                            token : bot.api.token,
+                            user : message.user
+                        });
+                        console.log('.......userprofile ....', userProfile);
+                        console.log(userProfile.user.profile.email);
                         
-                    });
-                    console.log('open view');
-                    
-                } else if (!existingConn) {
-                    const authUrl = connFactory.getAuthUrl(message.team);
-                    await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
-                } 
+                        const result = await bot.api.views.open({
+                            trigger_id: message.trigger_id,
+                            view: {
+                                "type": "modal",
+                                "notify_on_close" : true,
+                                "callback_id" : "actionSelectionView",
+                                "private_metadata" : userProfile.user.profile.email,
+                                "title": {
+                                    "type": "plain_text",
+                                    "text": "Reference Assistant",
+                                    "emoji": true
+                                },
+                                "submit": {
+                                    "type": "plain_text",
+                                    "text": "Next",
+                                    "emoji": true
+                                },
+                                "close": {
+                                    "type": "plain_text",
+                                    "text": "Cancel",
+                                    "emoji": true
+                                },
+                                
+                                "blocks": [
+                                    {
+                                        "type": "input",
+                                        "block_id": "accblock",
+                                        "element": {
+                                            "type": "radio_buttons",
+                                            "action_id": "searchid",
+                                            "options": [
+                                                {
+                                                    "value": "account_search",
+                                                    "text": {
+                                                        "type": "plain_text",
+                                                        "text": "Reference Account(s)"
+                                                    }
+                                                },
+                                                {
+                                                    "value": "content_search",
+                                                    "text": {
+                                                        "type": "plain_text",
+                                                        "text": "Reference Content"
+                                                    }
+                                                },
+                                                {
+                                                    "value": "both",
+                                                    "text": {
+                                                        "type": "plain_text",
+                                                        "text": "Both"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "label": {
+                                            "type": "plain_text",
+                                            "text": "What do you need?",
+                                            "emoji": true
+                                        }
+                                    }
+                                ]
+                            }
+                            
+                        });
+                        console.log('open view');
+                        
+                    } else if (!existingConn) {
+                        const authUrl = connFactory.getAuthUrl(message.team);
+                        await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
+                    }
+                }
             } catch (err) {
                 logger.log(err);
             }
