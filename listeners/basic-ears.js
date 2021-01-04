@@ -196,7 +196,8 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
                 console.log('slash_command');
                 console.dir(message);
                 if(message.text && message.text.toLowerCase()  == 'help'){
-                    await bot.reply(message, `Welcome in the world of Slash commands........`);
+                    await bot.reply(message, `This command allows you to start a search for customer reference resources, without being in Salesforce.\n`
+                        + `You’ll be taken to the Reference Search page where you can refine your search, request the use of an account, and, if enabled, share content.`);
                 }else{
                     let existingConn = await connFactory.getConnection(message.team, controller);
                     
