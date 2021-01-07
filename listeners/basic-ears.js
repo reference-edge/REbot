@@ -160,15 +160,12 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
     });
 
     controller.on('onboard', async (bot, params) => {
-        console.log('channel Id', params.channelId);
-        const channel_url = 'https://slack.com/app_redirect?channel=' + params.channelId;
         const internal_url = 'slack://channel?team='+ params.teamId +'&id='+ params.channelId;
-        console.log('channel_url', channel_url);
         console.log('internal_url', internal_url);
         await bot.startPrivateConversation(params.userId);
         await bot.say(`Hello, I\'m REbot. I have joined your workspace.\n`
                 + `I\'m here to help deliver messages from ReferenceEdge to your Customer Reference Program (CRP) team and individual users.\n`
-                + `I have created a  <${channel_url}|public channel> for the <${internal_url}|CRP Team>. All updates concerning the Customer Reference Team `
+                + `I have created a  public channel for the <${internal_url}|CRP Team>. All updates concerning the Customer Reference Team `
                 + `will be posted in this channel. You should add the members of the Customer Reference Team and me, REbot, `
                 + `to this channel to ensure they receive updates. You can do this by @mentioning them / me, like this: @REbot.`
                 + `To connect your workspace to ReferenceEdge you can type \'connect to a salesforce instance\'.`
@@ -189,8 +186,6 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
                 team_id: authData.team.id
             };
             console.log('-----/crpTeamChannel/-----');
-            console.dir(result);
-            console.dir(crpTeamChannel);
             const savedData = await controller.plugins.database.channels.save(crpTeamChannel);
             console.log('savedData', savedData);
             
