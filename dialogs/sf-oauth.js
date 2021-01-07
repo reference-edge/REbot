@@ -5,21 +5,28 @@ module.exports = controller => {
     let convo = new BotkitConversation('sf_auth', controller);
 
     convo.addMessage({
+        ephemeral: true,
         text: `Ok, You are still connected to your old Salesforce instance.`,
         action: 'complete'
     }, 'no_thread');
 
     convo.addMessage({
+        ephemeral: true,
         text: `Sorry, I didn't understand that. Please provide a yes or no response.`,
         action: 'default'
     }, 'bad_response');
 
     convo.addMessage({
+        ephemeral: true,
         text: `click this link to connect\n<{{&vars.authUrl}}|Connect to Salesforce>`,
         action: 'complete'
     }, 'connect');
 
-    convo.addQuestion('You are already connected to a Salesforce instance. Are you sure you want to disconnect from it and connect to another instance?', [
+    convo.addQuestion(
+        {
+            ephemeral: true,
+            text: 'You are already connected to a Salesforce instance. Are you sure you want to disconnect from it and connect to another instance?'
+        }, [
         {
             pattern: '^(yes|yea|yup|yep|ya|sure|ok|y|yeah|yah)',
             handler: async function(response, convo, bot) {
