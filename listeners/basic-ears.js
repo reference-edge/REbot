@@ -196,8 +196,15 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
                 console.log('slash_command');
                 console.dir(message);
                 if(message.text && message.text.toLowerCase()  == 'help'){
-                    await bot.reply(message, `This command allows you to start a search for customer reference resources, without being in Salesforce.\n`
-                        + `You’ll be taken to the Reference Search page where you can refine your search, request the use of an account, and, if enabled, share content.`);
+                    await bot.reply(message,
+                        {
+                            "response_type": "ephemeral",
+                            "text": "This command allows you to start a search for customer reference resources, without being in Salesforce."+
+                                    "You’ll be taken to the Reference Search page where you can refine your search, request the use of an account, and, if enabled, share content."
+                        }
+                    );
+                    /* await bot.reply(message, `This command allows you to start a search for customer reference resources, without being in Salesforce.\n`
+                        + `You’ll be taken to the Reference Search page where you can refine your search, request the use of an account, and, if enabled, share content.`); */
                 }else{
                     let existingConn = await connFactory.getConnection(message.team, controller);
                     
