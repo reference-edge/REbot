@@ -176,13 +176,14 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
                 token: authData.access_token,
                 name: 'crp_team'
             });
+
             const crpTeamChannel = {
                 id: result.channel.id,
                 name: result.channel.name,
                 team_id: authData.team.id
             };
             console.log('-----/crpTeamChannel/-----');
-            console.dir(crpTeamChannel);
+            console.dir(result);
             await controller.plugins.database.channels.save(crpTeamChannel);
         } catch (err) {
             console.log('error setting up crp_team channel:', err);
@@ -200,8 +201,6 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
                         `This command allows you to start a search for customer reference resources, without being in Salesforce.\n`
                         + `You’ll be taken to the Reference Search page where you can refine your search, request the use of an account, and, if enabled, share content.`
                     );
-                    /* await bot.reply(message, `This command allows you to start a search for customer reference resources, without being in Salesforce.\n`
-                        + `You’ll be taken to the Reference Search page where you can refine your search, request the use of an account, and, if enabled, share content.`); */
                 }else{
                     let existingConn = await connFactory.getConnection(message.team, controller);
                     
