@@ -159,14 +159,16 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
         }
     });
 
-    controller.on('onboard', async (bot, userId, channelId) => {
+    controller.on('onboard', async (bot, userId, channelId, teamId) => {
         console.log('channel Id', channelId);
         const channel_url = 'https://slack.com/app_redirect?channel='+channelId;
+        const internal_url = 'slack://channel?team={'+ teamId +'}&id={'+channelId+'}';
         console.log('channel_url', channel_url);
+        console.log('internal_url', internal_url);
         await bot.startPrivateConversation(userId);
         await bot.say(`Hello, I\'m REbot. I have joined your workspace.\n`
                 + `I\'m here to help deliver messages from ReferenceEdge to your Customer Reference Program (CRP) team and individual users.\n`
-                + `I have created a  <${channel_url}|public channel> for the CRP Team. All updates concerning the Customer Reference Team `
+                + `I have created a  <${channel_url}|public channel> for the <${internal_url}|CRP Team>. All updates concerning the Customer Reference Team `
                 + `will be posted in this channel. You should add the members of the Customer Reference Team and me, REbot, `
                 + `to this channel to ensure they receive updates. You can do this by @mentioning them / me, like this: @REbot.`
                 + `To connect your workspace to ReferenceEdge you can type \'connect to a salesforce instance\'.`
@@ -191,7 +193,7 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
             console.dir(crpTeamChannel);
             const savedData = await controller.plugins.database.channels.save(crpTeamChannel);
             console.log('savedData', savedData);
-            controller.trigger('onboard', bot, result.channel.id);
+            controller.trigger('onboard', bot, crpTeamChannel.id, crpTeamChannel.team_id);
 
         } catch (err) {
             console.log('error setting up crp_team channel:', err);
