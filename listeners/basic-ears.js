@@ -188,8 +188,10 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
             };
             console.log('-----/crpTeamChannel/-----');
             console.dir(result);
-            await controller.plugins.database.channels.save(crpTeamChannel);
-            controller.trigger('onboard', bot, authData.authed_user.id, crpTeamChannel.id);
+            console.dir(crpTeamChannel);
+            const savedData = await controller.plugins.database.channels.save(crpTeamChannel);
+            console.log('savedData', savedData);
+            controller.trigger('onboard', bot, authData.authed_user.id, result.channel.id);
 
         } catch (err) {
             console.log('error setting up crp_team channel:', err);
