@@ -198,7 +198,7 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
                 if(message.text && message.text.toLowerCase()  == 'help'){
                     await bot.reply(message,
                         {
-                            "response_type": "ephemeral",
+                            "response_type": "in_channel",
                             "text": "This command allows you to start a search for customer reference resources, without being in Salesforce."+
                                     "You’ll be taken to the Reference Search page where you can refine your search, request the use of an account, and, if enabled, share content."
                         }
