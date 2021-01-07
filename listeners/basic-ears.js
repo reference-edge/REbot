@@ -162,7 +162,7 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
     controller.on('onboard', async (bot, params) => {
         console.log('channel Id', params.channelId);
         const channel_url = 'https://slack.com/app_redirect?channel=' + params.channelId;
-        const internal_url = 'slack://channel?team={'+ params.teamId +'}&id={'+ params.channelId +'}';
+        const internal_url = 'slack://channel?team='+ params.teamId +'&id='+ params.channelId;
         console.log('channel_url', channel_url);
         console.log('internal_url', internal_url);
         await bot.startPrivateConversation(params.userId);
