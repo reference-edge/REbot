@@ -196,7 +196,7 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
                 console.log('slash_command');
                 console.dir(message);
                 if(message.text && message.text.toLowerCase()  == 'help'){
-                    await bot.reply(message,
+                    await bot.replyEphemeral(message,
                         {
                             "response_type": "ephemeral",
                             "text": "This command allows you to start a search for customer reference resources, without being in Salesforce."+
