@@ -135,8 +135,9 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
                 user_id : authData.bot_user_id,
                 created_by: authData.authed_user.id
             };
-            await controller.plugins.database.teams.save(existingTeam);
-            
+            const savedTeam = await controller.plugins.database.teams.save(existingTeam);
+            console.log('saved team');
+            console.dir(savedTeam);
 			if (isNew) {
                 let bot = await controller.spawn(authData.team.id);
                 /*
@@ -147,7 +148,7 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
                   } else {*/
 
                       controller.trigger('create_channel', bot, authData);
-                      controller.trigger('onboard', bot, authData.authed_user.id);
+                      //controller.trigger('onboard', bot, authData.authed_user.id);
                   /*}
             	});*/
                 
@@ -158,15 +159,18 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
         }
     });
 
-    controller.on('onboard', async (bot, userId) => {
+    controller.on('onboard', async (bot, userId, channelId) => {
+        console.log('channel Id', channelId);
+        const channel_url = 'https://slack.com/app_redirect?channel='+channelId;
+        console.log('channel_url', channel_url);
         await bot.startPrivateConversation(userId);
-        await bot.say('Hello, I\'m REbot. I have joined your workspace.\n'
-                + 'I\'m here to help deliver messages from ReferenceEdge to your Customer Reference Program (CRP) team and individual users.\n'
-                + 'I have created a public channel for the CRP Team. All updates concerning the Customer Reference Team '
-                + 'will be posted in this channel. You should add the members of the Customer Reference Team and me, REbot, '
-                + 'to this channel to ensure they receive updates. You can do this by @mentioning them / me, like this: @REbot.'
-                + 'To connect your workspace to ReferenceEdge you can type \'connect to a salesforce instance\'.'
-                + 'Just message me if you have any other queries.');
+        await bot.say(`Hello, I\'m REbot. I have joined your workspace.\n`
+                + `I\'m here to help deliver messages from ReferenceEdge to your Customer Reference Program (CRP) team and individual users.\n`
+                + `I have created a  <${channel_url}|public channel> for the CRP Team. All updates concerning the Customer Reference Team `
+                + `will be posted in this channel. You should add the members of the Customer Reference Team and me, REbot, `
+                + `to this channel to ensure they receive updates. You can do this by @mentioning them / me, like this: @REbot.`
+                + `To connect your workspace to ReferenceEdge you can type \'connect to a salesforce instance\'.`
+                + `Just message me if you have any other queries.`);
     });
 
     controller.on('create_channel', async (bot, authData) => {
@@ -185,6 +189,8 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
             console.log('-----/crpTeamChannel/-----');
             console.dir(result);
             await controller.plugins.database.channels.save(crpTeamChannel);
+            controller.trigger('onboard', bot, authData.authed_user.id, crpTeamChannel.id);
+
         } catch (err) {
             console.log('error setting up crp_team channel:', err);
         }
