@@ -15,13 +15,13 @@ module.exports = controller => {
             const supportUrl = `https://www.point-of-reference.com/contact/`;
 
             if (message.text.includes('hello')) {
-                bot.reply(message, `Hi, you can invite me to the channel for Customer Reference Team to receive updates!`);
+                bot.replyEphemeral(message, `Hi, you can invite me to the channel for Customer Reference Team to receive updates!`);
             } else if (message.text == 'connect to a salesforce instance' || message.intent === 'connect_to_sf') {
                 let existingConn = await connFactory.getConnection(message.team, controller);
 
                 if (!existingConn) {
                     const authUrl = connFactory.getAuthUrl(message.team);
-                    bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
+                    bot.replyEphemeral(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
                 }else {
                         /* await controller.plugins.database.orgs.delete(message.team);
                         const authUrl = connFactory.getAuthUrl(message.team);
@@ -29,11 +29,11 @@ module.exports = controller => {
                         await bot.beginDialog('sf_auth');
                  }
             } else if (message.text.includes('help')) {
-                bot.reply(message, `I can connect you to a salesforce instance.
+                bot.replyEphemeral(message, `I can connect you to a salesforce instance.
 Just type 'connect to a salesforce instance' to get started.
 Please visit the <${supportUrl}|Support Page> if you have any further questions.`);
             } else {
-                bot.reply(message, `Sorry, I didn't understand that.`);
+                bot.replyEphemeral(message, `Sorry, I didn't understand that.`);
             }
         } catch (err) {
             logger.log(err);
@@ -197,11 +197,8 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
                 console.dir(message);
                 if(message.text && message.text.toLowerCase()  == 'help'){
                     await bot.replyEphemeral(message,
-                        {
-                            "response_type": "ephemeral",
-                            "text": "This command allows you to start a search for customer reference resources, without being in Salesforce."+
-                                    "You’ll be taken to the Reference Search page where you can refine your search, request the use of an account, and, if enabled, share content."
-                        }
+                        `This command allows you to start a search for customer reference resources, without being in Salesforce.\n`
+                        + `You’ll be taken to the Reference Search page where you can refine your search, request the use of an account, and, if enabled, share content.`
                     );
                     /* await bot.reply(message, `This command allows you to start a search for customer reference resources, without being in Salesforce.\n`
                         + `You’ll be taken to the Reference Search page where you can refine your search, request the use of an account, and, if enabled, share content.`); */
@@ -284,7 +281,7 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
                         
                     } else if (!existingConn) {
                         const authUrl = connFactory.getAuthUrl(message.team);
-                        await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
+                        await bot.replyEphemeral(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
                     }
                 }
             } catch (err) {
@@ -314,7 +311,7 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
                 
                 if (!existingConn) {
                     const authUrl = connFactory.getAuthUrl(message.team);
-                    await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
+                    await bot.replyEphemeral(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
                 } else {
                     
                     // When Account Name entered
