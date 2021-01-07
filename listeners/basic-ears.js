@@ -193,7 +193,7 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
             console.dir(crpTeamChannel);
             const savedData = await controller.plugins.database.channels.save(crpTeamChannel);
             console.log('savedData', savedData);
-            controller.trigger('onboard', bot, crpTeamChannel.id, crpTeamChannel.team_id);
+            controller.trigger('onboard', bot, authData.authed_user.id, crpTeamChannel.id, crpTeamChannel.team_id);
 
         } catch (err) {
             console.log('error setting up crp_team channel:', err);
