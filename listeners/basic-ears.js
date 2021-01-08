@@ -148,6 +148,8 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
                 created_by: authData.authed_user.id
             };
             const savedTeam = await controller.plugins.database.teams.save(existingTeam);
+            const teamData = await controller.plugins.database.teams.get(existingTeam.id);
+            console.log('@@@@@team data after saving team data', teamData);
             console.log('saved team');
             console.dir(savedTeam);
 			if (isNew) {
