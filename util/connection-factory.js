@@ -15,7 +15,9 @@ async function findOrgByTeamId(teamId, botController) {
         let orgs = await botController.plugins.database.orgs.get(teamId);
         return orgs;
     } catch (err) {
-        throw err;
+        console.log('error in findOrgByTeamId');
+        console.dir(err);
+        //throw err;
     }
 }
 
@@ -45,7 +47,9 @@ async function getExistingConnection(teamId, botController) {
         }
         return null;
     } catch (err) {
-        throw err;
+        console.log('error in getExistingConnection');
+        console.dir(err);
+        //throw err;
     }
 }
 
@@ -54,7 +58,9 @@ async function saveOrg(data, botController) {
     try {
         await botController.plugins.database.orgs.save(data);
     } catch (err) {
-        throw err;
+        console.log('error in saveOrg');
+        console.dir(err);
+        //throw err;
     }
 }
 
@@ -64,7 +70,9 @@ async function deleteOrg(teamId, botController) {
         await botController.plugins.database.orgs.delete(teamId);
         return 'success';
     } catch (err) {
-        throw err;
+        console.log('error in deleteOrg');
+        console.dir(err);
+        //throw err;
     }
 }
 
@@ -83,7 +91,9 @@ module.exports = {
             let conn = await getExistingConnection(teamId, botController);
             return conn;
         } catch (err) {
-            throw err;
+            console.log('error in getConnection');
+            console.dir(err);
+            //throw err;
         }
     },
     connect: async (authCode, botController, teamId) => {
@@ -126,7 +136,9 @@ module.exports = {
             openConnections[teamId] = conn;
             return conn;
         } catch (err) {
-            throw err;
+            console.log('error in connect');
+            console.dir(err);
+            //throw err;
         }
     },
     revoke: async (orgData, botController) => {
@@ -137,7 +149,9 @@ module.exports = {
             const deleteResult = await deleteOrg(orgData.teamId, botController);
             return deleteResult;
         } catch (err) {
-            throw err;
+            console.log('error in revoke');
+            console.dir(err);
+            //throw err;
         }
     }
 };

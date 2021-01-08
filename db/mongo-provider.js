@@ -35,6 +35,7 @@ function createModel(db, table) {
         if (err.name === 'OverwriteModelError') {
             return db.model(table);
         } else {
+            console.log('error in createModel');
             throw(err);
         }
     }
@@ -53,6 +54,7 @@ function setupStorage(tableModel, tabelName) {
                 }
                 return result._doc;
             } catch (err) {
+                console.log('error in setupStorage get');
                 throw err;
             }
         },
@@ -65,6 +67,7 @@ function setupStorage(tableModel, tabelName) {
                     { upsert: true, new: true });
                 return 'success';
             } catch (err) {
+                console.log('error in setupStorage save');
                 throw err;
             }
         },
@@ -74,6 +77,7 @@ function setupStorage(tableModel, tabelName) {
                 const result = await tableModel.find({});
                 return result.map(d => d._doc);
             } catch (err) {
+                console.log('error in setupStorage all');
                 throw err;
             }
         },
@@ -83,6 +87,7 @@ function setupStorage(tableModel, tabelName) {
                 await tableModel.deleteOne({ id: id });
                 return 'success';
             } catch (err) {
+                console.log('error in setupStorage delete');
                 throw err;
             }
         },
@@ -92,6 +97,7 @@ function setupStorage(tableModel, tabelName) {
                 const result = await tableModel.find(data, null, options);
                 return result.map(d => d._doc);
             } catch (err) {
+                console.log('error in setupStorage find');
                 throw err;
             }
         }

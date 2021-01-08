@@ -90,7 +90,7 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
     controller.on('app_home_opened', async (bot, message) =>{
         console.log('----------App-home-opened---------');
         console.dir(message);
-        bot.replyEphemeral('hello this is REBot');
+        await bot.say('hello this is REBot');
     });
 
     controller.on('app_uninstalled', async (ctrl, event) => {
@@ -113,8 +113,11 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
                 }, controller);
                 logger.log('delete org result:', revokeResult);
             }
-            await controller.plugins.database.teams.delete(event.team);
+            const deletion_result = await controller.plugins.database.teams.delete(event.team);
+            console.log('deletion result------');
+            console.dir(deletion_result);
         } catch (err) {
+            console.log('error occured during uninstall...');
         	logger.log(err);
         }
     });
@@ -126,6 +129,7 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
         
         try {
             let existingTeam = await controller.plugins.database.teams.get(authData.team.id);
+
             let isNew = false;
 
             if (!existingTeam) {
@@ -135,6 +139,8 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
                     name: authData.team.name,
                     is_migrating: false
                 };
+            }else{
+                console.log('found existing team...');
             }
             existingTeam.bot = {
                 token : authData.access_token,
