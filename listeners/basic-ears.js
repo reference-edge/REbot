@@ -87,6 +87,12 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
         });
     });
 
+    controller.on('app_home_opened', async (bot, message) =>{
+        console.log('----------App-home-opened---------');
+        console.dir(message);
+        bot.replyEphemeral('hello this is REBot');
+    });
+
     controller.on('app_uninstalled', async (ctrl, event) => {
 
         try {
