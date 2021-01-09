@@ -87,16 +87,31 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
         });
     });
 
-    controller.on('app_home_opened', async (bot, message) =>{
+    controller.on('app_home_opened', async (bot, event) =>{
         console.log('----------App-home-opened---------');
-        console.dir(message);
+
+        console.dir(event);
+        try {
+            // Call the conversations.history method using WebClient
+            const result = await bot.api.conversations.history({
+                channel: event.channel
+            });
+            
+            let conversationHistory = result.messages;
+            
+            // Print results
+            console.log(conversationHistory.length + " messages found in " + event.channel);
+        }catch (error) {
+            console.log('--error in app home opened event--');
+            console.error(error);
+        }
         await bot.say('hello this is REBot');
     });
 
     controller.on('app_uninstalled', async (ctrl, event) => {
 
         try {
-        	/* const channels = await controller.plugins.database.channels.find({ team_id: event.team });
+        	const channels = await controller.plugins.database.channels.find({ team_id: event.team });
 
             if (channels && channels.length > 0) {
                 await controller.plugins.database.channels.delete(channels[0].id);
@@ -115,7 +130,7 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
             }
             const deletion_result = await controller.plugins.database.teams.delete(event.team);
             console.log('deletion result------');
-            console.dir(deletion_result); */
+            console.dir(deletion_result);
         } catch (err) {
             console.log('error occured during uninstall...');
         	logger.log(err);
