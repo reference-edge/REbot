@@ -97,15 +97,18 @@ module.exports = {
         }
     },
     connect: async (authCode, botController, teamId) => {
+        
 
         if (teamId in openConnections) {
+            console.log('----------openConnections-----------');
             return openConnections[teamId];
         }
 
         try {
             let conn = await getExistingConnection(teamId, botController);
 
-            if (conn) {
+            if (conn) {console.log('found existing connection....')
+
                 return conn;
             }
             conn = new jsforce.Connection({ oauth2: oauth2 });

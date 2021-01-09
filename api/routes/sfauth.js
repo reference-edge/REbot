@@ -16,6 +16,7 @@ module.exports = controller => {
             }
 
             if (req.query.code && req.query.state) {
+                console.log('after successful connecttion... during saving...');
                 let conn = await connFactory.connect(req.query.code, controller, req.query.state);
                 let teamData = { addTeam: req.query.state };
                 await saveTeamId(conn, teamData);
@@ -24,7 +25,7 @@ module.exports = controller => {
             }
         } catch (err) {
             logger.log('salesforce auth error:', err);
-            res.redirect('/auth-failed.html');
+            //res.redirect('/auth-failed.html');
         }
     });
 }
