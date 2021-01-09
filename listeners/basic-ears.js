@@ -98,14 +98,26 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
             });
             
             let conversationHistory = result.messages;
-            
+            const channels = await controller.plugins.database.channels.find({ team_id: event.team });
+            if (channels && channels.length > 0 && conversationHistory.length <= 0) {
+                const internal_url = 'slack://channel?team='+ event.team +'&id='+ channels[0].id;
+                await bot.say(`Hello, I\'m REbot. I have joined your workspace.\n`
+                + `I\'m here to help deliver messages from ReferenceEdge to your Customer Reference Program (CRP) team and individual users.\n`
+                + `I have created a  public channel for the <${internal_url}|CRP Team>. All updates concerning the Customer Reference Team `
+                + `will be posted in this channel. You should add the members of the Customer Reference Team and me, REbot, `
+                + `to this channel to ensure they receive updates. You can do this by @mentioning them / me, like this: @REbot.`
+                + `To connect your workspace to ReferenceEdge you can type \'connect to a salesforce instance\'.`
+                + `Just message me if you have any other queries.`);
+            }else {
+                await bot.say('hello this is REBot');
+            }
             // Print results
             console.log(conversationHistory.length + " messages found in " + event.channel);
         }catch (error) {
             console.log('--error in app home opened event--');
             console.error(error);
         }
-        await bot.say('hello this is REBot');
+        
     });
 
     controller.on('app_uninstalled', async (ctrl, event) => {
@@ -169,18 +181,7 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
             console.dir(savedTeam);
 			if (isNew) {
                 let bot = await controller.spawn(authData.team.id);
-                /*
-                bot.api.auth.test({}, (err, botAuth) => {
-
-                  if (err) {
-                      logger.log('auth error:', err);
-                  } else {*/
-
-                      controller.trigger('create_channel', bot, authData);
-                      //controller.trigger('onboard', bot, authData.authed_user.id);
-                  /*}
-            	});*/
-                
+                controller.trigger('create_channel', bot, authData);
             }
         } catch (err) {
             console.log('-------error-----------');
@@ -189,7 +190,7 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
     });
 
     controller.on('onboard', async (bot, params) => {
-        const internal_url = 'slack://channel?team='+ params.teamId +'&id='+ params.channelId;
+        /* const internal_url = 'slack://channel?team='+ params.teamId +'&id='+ params.channelId;
         console.log('internal_url', internal_url);
         await bot.startPrivateConversation(params.userId);
         await bot.say(`Hello, I\'m REbot. I have joined your workspace.\n`
@@ -198,7 +199,7 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
                 + `will be posted in this channel. You should add the members of the Customer Reference Team and me, REbot, `
                 + `to this channel to ensure they receive updates. You can do this by @mentioning them / me, like this: @REbot.`
                 + `To connect your workspace to ReferenceEdge you can type \'connect to a salesforce instance\'.`
-                + `Just message me if you have any other queries.`);
+                + `Just message me if you have any other queries.`); */
     });
 
     controller.on('create_channel', async (bot, authData) => {
