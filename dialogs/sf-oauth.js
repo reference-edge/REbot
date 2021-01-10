@@ -3,6 +3,7 @@ const connFactory = require('../util/connection-factory');
 
 module.exports = controller => {
     let convo = new BotkitConversation('sf_auth', controller);
+    
 
     convo.addMessage({
         ephemeral: true,
@@ -32,10 +33,24 @@ module.exports = controller => {
             handler: async function(response, convo, bot) {
                 console.log('response----');
                 console.log(response);
-                var teamResponse = await bot.api.team.info();
-                const authUrl = connFactory.getAuthUrl(teamResponse.team.id);
-                convo.setVar('authUrl',authUrl);
-                await convo.gotoThread('connect');
+                let teamResponse = await bot.api.team.info();
+                let existingConn = await connFactory.getConnection(teamResponse.team.id, controller);
+                try{
+                    const revokeResult = await connFactory.revoke({
+                        revokeUrl: existingConn.oauth2.revokeServiceUrl,
+                        refreshToken: existingConn.refreshToken,
+                        teamId: teamResponse.team.id
+                    }, controller);
+                    if (revokeResult === 'success') {
+                        const authUrl = connFactory.getAuthUrl(teamResponse.team.id);
+                        convo.setVar('authUrl',authUrl);
+                        await convo.gotoThread('connect');
+                    }else {
+                        logger.log(revokeResult);
+                    }
+                } catch(err) {
+                    logger.log('revoke error:', err);
+                }
             }
         },
         {
