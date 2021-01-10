@@ -98,6 +98,8 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
             });
             
             let conversationHistory = result.messages;
+            console.log('----------messages----------------');
+            console.dir(conversationHistory);
             const channels = await controller.plugins.database.channels.find({ team_id: event.team });
             if (channels && channels.length > 0 && conversationHistory.length <= 0) {
                 const internal_url = 'slack://channel?team='+ event.team +'&id='+ channels[0].id;
