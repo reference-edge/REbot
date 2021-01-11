@@ -99,7 +99,7 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
             
             let conversationHistory = result.messages;
             console.log('----------messages----------------');
-            console.dir(conversationHistory);
+            console.dir(conversationHistory[0]);
             console.log(conversationHistory[0].hasOwnProperty('ts'));
             
             const channels = await controller.plugins.database.channels.find({ team_id: event.team });
