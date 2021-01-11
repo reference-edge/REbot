@@ -114,7 +114,7 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
                 + `Just message me if you have any other queries.`);
             }else {
                 if(conversationHistory.length > 0 && conversationHistory[0].hasOwnProperty('ts')){
-                    let ts = conversationHistory[0].ts;
+                    let ts = parseFloat(conversationHistory[0].ts);
                     console.log('message ts', ts);
                     let currentDateTime = new Date();
                     let currentTs = currentDateTime.getTime()/1000.0;
