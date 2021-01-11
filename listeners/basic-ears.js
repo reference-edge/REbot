@@ -119,7 +119,11 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
                     let currentDateTime = new Date();
                     let currentTs = currentDateTime.getTime()/1000.0;
                     console.log('current ts', currentTs);
-                    if(currentTs >= ts + 3600){
+                    console.log('added hour', ts+3600);
+                    
+                    ts = ts + 3600;
+                    console.log(currentTs > ts);
+                    if(currentTs > ts){
                         await bot.say('hello this is REBot');
                     }
                 }
