@@ -100,6 +100,8 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
             let conversationHistory = result.messages;
             console.log('----------messages----------------');
             console.dir(conversationHistory);
+            console.log(conversationHistory[0].hasOwnProperty('ts'));
+            
             const channels = await controller.plugins.database.channels.find({ team_id: event.team });
             if (channels && channels.length > 0 && conversationHistory.length <= 0) {
                 const internal_url = 'slack://channel?team='+ event.team +'&id='+ channels[0].id;
@@ -111,7 +113,17 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
                 + `To connect your workspace to ReferenceEdge you can type \'connect to a salesforce instance\'.`
                 + `Just message me if you have any other queries.`);
             }else {
-                await bot.say('hello this is REBot');
+                if(conversationHistory.length > 0 && conversationHistory[0].hasOwnProperty('ts')){
+                    let ts = conversationHistory[0].ts;
+                    console.log('message ts', ts);
+                    let currentDateTime = new Date();
+                    let currentTs = currentDateTime.getTime()/1000.0;
+                    console.log('current ts', currentTs);
+                    if(currentTs >= ts + 3600){
+                        await bot.say('hello this is REBot');
+                    }
+                }
+                
             }
             // Print results
             console.log(conversationHistory.length + " messages found in " + event.channel);
