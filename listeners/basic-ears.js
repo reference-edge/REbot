@@ -90,47 +90,23 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
     controller.on('app_home_opened', async (bot, event) =>{
         console.log('----------App-home-opened---------');
 
-        console.dir(event);
         try {
-            // Call the conversations.history method using WebClient
+            // Call the conversations.history method.
             const result = await bot.api.conversations.history({
                 channel: event.channel
             });
             
             let conversationHistory = result.messages;
             console.log('----------messages----------------');
-            console.dir(conversationHistory[0]);
-            console.log(conversationHistory[0].hasOwnProperty('ts'));
             
             const channels = await controller.plugins.database.channels.find({ team_id: event.team });
             if (channels && channels.length > 0 && conversationHistory.length <= 0) {
                 const internal_url = 'slack://channel?team='+ event.team +'&id='+ channels[0].id;
+                const support_page = 'https://www.point-of-reference.com/contact/';
                 await bot.say(`Hello, I\'m REbot. I have joined your workspace.\n`
                 + `I\'m here to help deliver messages from ReferenceEdge to your Customer Reference Program (CRP) team and individual users.\n`
-                + `I have created a  public channel for the <${internal_url}|CRP Team>. All updates concerning the Customer Reference Team `
-                + `will be posted in this channel. You should add the members of the Customer Reference Team and me, REbot, `
-                + `to this channel to ensure they receive updates. You can do this by @mentioning them / me, like this: @REbot.`
-                + `To connect your workspace to ReferenceEdge you can type \'connect to a salesforce instance\'.`
-                + `Just message me if you have any other queries.`);
-            }else {
-                if(conversationHistory.length > 0 && conversationHistory[0].hasOwnProperty('ts')){
-                    let ts = parseFloat(conversationHistory[0].ts);
-                    console.log('message ts', ts);
-                    let currentDateTime = new Date();
-                    let currentTs = currentDateTime.getTime()/1000.0;
-                    console.log('current ts', currentTs);
-                    console.log('added hour', ts+3600);
-                    
-                    ts = ts + 3600;
-                    console.log(currentTs > ts);
-                    if(currentTs > ts){
-                        await bot.say('hello this is REBot');
-                    }
-                }
-                
+                );
             }
-            // Print results
-            console.log(conversationHistory.length + " messages found in " + event.channel);
         }catch (error) {
             console.log('--error in app home opened event--');
             console.error(error);
@@ -208,16 +184,18 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
     });
 
     controller.on('onboard', async (bot, params) => {
-        /* const internal_url = 'slack://channel?team='+ params.teamId +'&id='+ params.channelId;
+        const internal_url = 'slack://channel?team='+ params.teamId +'&id='+ params.channelId;
+        const support_page = 'https://www.point-of-reference.com/contact/';
         console.log('internal_url', internal_url);
+
         await bot.startPrivateConversation(params.userId);
         await bot.say(`Hello, I\'m REbot. I have joined your workspace.\n`
                 + `I\'m here to help deliver messages from ReferenceEdge to your Customer Reference Program (CRP) team and individual users.\n`
-                + `I have created a  public channel for the <${internal_url}|CRP Team>. All updates concerning the Customer Reference Team `
-                + `will be posted in this channel. You should add the members of the Customer Reference Team and me, REbot, `
-                + `to this channel to ensure they receive updates. You can do this by @mentioning them / me, like this: @REbot.`
+                + `I have created a  public channel with the name <${internal_url}|crp_team> for the CRP Team. All updates for the CRP Team will be posted in this channel `
+                + `You should add the members of the Customer Reference Team to this channel to ensure they receive these updates `
+                + `You can do this by selecting the crp_team channel then clicking the add people icon.`
                 + `To connect your workspace to ReferenceEdge you can type \'connect to a salesforce instance\'.`
-                + `Just message me if you have any other queries.`); */
+                + `Please visit the <${support_page}|Support Page> if you have any further questions.`);
     });
 
     controller.on('create_channel', async (bot, authData) => {
