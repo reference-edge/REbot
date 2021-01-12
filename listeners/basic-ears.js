@@ -90,6 +90,8 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
     controller.on('app_home_opened', async (bot, event) =>{
         console.log('----------App-home-opened---------');
         console.log('event channel', event.channel);
+        console.log('bot information');
+        console.dir(bot);
         try {
             // Call the conversations.history method.
             const result = await bot.api.conversations.history({
