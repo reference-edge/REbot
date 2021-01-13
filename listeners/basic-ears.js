@@ -29,9 +29,12 @@ module.exports = controller => {
                         await bot.beginDialog('sf_auth');
                  }
             } else if (message.text.includes('help')) {
-                bot.replyEphemeral(message, `I can connect you to a salesforce instance.
-Just type 'connect to a salesforce instance' to get started.
-Please visit the <${supportUrl}|Support Page> if you have any further questions.`);
+                bot.replyEphemeral(message, 
+                `Hello, Referencebot here. I can help you find customer references, and deliver messages related to your customer reference requests. \n`
+                +`Use the /references command to start a search for reference accounts or reference content. \n`
+                + `Are you an administrator? I can connect you to a Salesforce instance.
+                    Just type "connect to a Salesforce instance" to get started.\n
+                    Please visit the <${supportUrl}|support page> if you have any further questions.`);
             } else {
                 bot.replyEphemeral(message, `Sorry, I didn't understand that.`);
             }
@@ -101,12 +104,12 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
             let conversationHistory = result.messages;
             console.log('----------messages----------------');
             
-            const channels = await controller.plugins.database.channels.find({ team_id: event.team });
-            if (channels && channels.length > 0 && conversationHistory.length <= 0) {
-                const internal_url = 'slack://channel?team='+ event.team +'&id='+ channels[0].id;
+            if (conversationHistory.length <= 0) {
                 const support_page = 'https://www.point-of-reference.com/contact/';
-                await bot.say(`Hello, I\'m REbot. I have joined your workspace.\n`
-                + `I\'m here to help deliver messages from ReferenceEdge to your Customer Reference Program (CRP) team and individual users.\n`
+                await bot.say(`Hello, I'm Referencebot. I'm here to assist you with finding customer references, and to help deliver messages related to your reference requests from ReferenceEdge to you. \n`
+                + `Use the /references command to request reference accounts or reference content. \n` 
+                + `Are you an administrator? I can connect you to a Salesforce instance. Just type 'connect to a Salesforce instance' to get started.\n`
+                +`Please visit the <${support_page}|support page> if you have any further questions.`
                 );
             }
         }catch (error) {
@@ -191,13 +194,12 @@ Please visit the <${supportUrl}|Support Page> if you have any further questions.
         console.log('internal_url', internal_url);
 
         await bot.startPrivateConversation(params.userId);
-        await bot.say(`Hello, I\'m REbot. I have joined your workspace.\n`
-                + `I\'m here to help deliver messages from ReferenceEdge to your Customer Reference Program (CRP) team and individual users.\n`
-                + `I have created a  public channel with the name <${internal_url}|crp_team> for the CRP Team. All updates for the CRP Team will be posted in this channel `
-                + `You should add the members of the Customer Reference Team to this channel to ensure they receive these updates `
-                + `You can do this by selecting the crp_team channel then clicking the add people icon.`
-                + `To connect your workspace to ReferenceEdge you can type \'connect to a salesforce instance\'.`
-                + `Please visit the <${support_page}|Support Page> if you have any further questions.`);
+        await bot.say(`Hello, Referencebot here. I have joined your workspace. I deliver messages from ReferenceEdge to your Customer Reference Program (CRP) team and individual users, and assist users with finding customer references.\n`
+                + `I have created a public channel with the name <${internal_url}|crp_team> for the CRP Team. All updates for the CRP Team will be posted in this channel. `
+                + `You should add the members of the Customer Reference Team to this channel to ensure they receive these updates. `
+                + `You can do this by selecting the crp_team channel then clicking the add people icon. `
+                + `To connect your workspace to ReferenceEdge you can type "connect to a salesforce instance". `
+                + `Please visit the <${support_page}|support page> if you have any further questions.`);
     });
 
     controller.on('create_channel', async (bot, authData) => {
