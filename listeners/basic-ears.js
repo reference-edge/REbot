@@ -32,9 +32,8 @@ module.exports = controller => {
                 bot.replyEphemeral(message, 
                 `Hello, Referencebot here. I can help you find customer references, and deliver messages related to your customer reference requests. \n`
                 +`Use the /references command to start a search for reference accounts or reference content. \n`
-                + `Are you an administrator? I can connect you to a Salesforce instance.
-                    Just type "connect to a Salesforce instance" to get started.\n
-                    Please visit the <${supportUrl}|support page> if you have any further questions.`);
+                + `Are you an administrator? I can connect you to a Salesforce instance. Just type "connect to a Salesforce instance" to get started. \n`
+                + `Please visit the <${supportUrl}|support page> if you have any further questions.`);
             } else {
                 bot.replyEphemeral(message, `Sorry, I didn't understand that.`);
             }
@@ -97,21 +96,21 @@ module.exports = controller => {
         console.dir(bot);
         try {
             // Call the conversations.history method.
-            const result = await bot.api.conversations.history({
+            /* const result = await bot.api.conversations.history({
                 channel: event.channel
             });
             
             let conversationHistory = result.messages;
             console.log('----------messages----------------');
             
-            if (conversationHistory.length <= 0) {
+            if (conversationHistory.length <= 0) { */
                 const support_page = 'https://www.point-of-reference.com/contact/';
                 await bot.say(`Hello, I'm Referencebot. I'm here to assist you with finding customer references, and to help deliver messages related to your reference requests from ReferenceEdge to you. \n`
                 + `Use the /references command to request reference accounts or reference content. \n` 
                 + `Are you an administrator? I can connect you to a Salesforce instance. Just type 'connect to a Salesforce instance' to get started.\n`
                 +`Please visit the <${support_page}|support page> if you have any further questions.`
                 );
-            }
+            //}
         }catch (error) {
             console.log('--error in app home opened event--');
             console.error(error);
