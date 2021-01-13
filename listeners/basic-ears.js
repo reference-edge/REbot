@@ -122,7 +122,7 @@ module.exports = controller => {
     controller.on('app_uninstalled', async (ctrl, event) => {
 
         try {
-        	const channels = await controller.plugins.database.channels.find({ team_id: event.team });
+        	/* const channels = await controller.plugins.database.channels.find({ team_id: event.team });
 
             if (channels && channels.length > 0) {
                 await controller.plugins.database.channels.delete(channels[0].id);
@@ -141,7 +141,7 @@ module.exports = controller => {
             }
             const deletion_result = await controller.plugins.database.teams.delete(event.team);
             console.log('deletion result------');
-            console.dir(deletion_result);
+            console.dir(deletion_result); */
         } catch (err) {
             console.log('error occured during uninstall...');
         	logger.log(err);
