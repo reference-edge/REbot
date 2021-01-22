@@ -355,6 +355,33 @@ module.exports = controller => {
                             let mapval = await getOpp(existingConn,email,actionName);
                             let searchURL1 = mapval['searchURL'];
                             console.log('content search if called.', searchURL1);
+                            searchURL1 = 'Thanks! Please <' + searchURL1 + '|click to complete your request in Salesforce.>';
+                            bot.httpBody({
+                                response_action: 'update',
+                                view: {
+                                    "type": "modal",
+                                    "notify_on_close" : true,
+                                    "close": {
+                                        "type": "plain_text",
+                                        "text": "Close",
+                                        "emoji": true
+                                    },
+                                    "title": {
+                                        "type": "plain_text",
+                                        "text": "Continue Search",
+                                        "emoji": true
+                                    },
+                                    "blocks": [
+                                        {
+                                            "type": "section",
+                                            "text": {
+                                                "type": "mrkdwn",
+                                                "text": searchURL1
+                                            }
+                                        }
+                                    ]
+                                }
+                            });
                             /** commented ::: will be used in next version.. */
                             /* bot.httpBody({
                                 response_action: 'update',
