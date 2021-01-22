@@ -352,6 +352,7 @@ module.exports = controller => {
                         let email = message.view.private_metadata + '::' + actionName;
                         let mapval = await getRefTypes(existingConn,actionName);
                         if (actionName == 'content_search') {
+                            let mapval = await getOpp(existingConn,email,actionName);
                             let searchURL1 = mapval['searchURL'];
                             console.log('content search if called.', searchURL1);
                             /** commented ::: will be used in next version.. */
