@@ -354,7 +354,7 @@ module.exports = controller => {
                         if (actionName == 'content_search') {
                             console.log('content search if called.');
                             /** commented ::: will be used in next version.. */
-                            /* bot.httpBody({
+                            bot.httpBody({
                                 response_action: 'update',
                                 view: {
                                     "type": "modal",
@@ -394,7 +394,7 @@ module.exports = controller => {
                                         }
                                     ]
                                 }
-                            }); */
+                            }); 
                         } else {
                             bot.httpBody({
                                 response_action: 'update',
