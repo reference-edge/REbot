@@ -91,9 +91,8 @@ module.exports = controller => {
 
     controller.on('app_home_opened', async (bot, event) =>{
         console.log('----------App-home-opened---------');
-        console.log('event channel', event.channel);
         console.log('bot information');
-        console.dir(bot);
+        
         try {
             // Call the conversations.history method.
             const result = await bot.api.conversations.history({
@@ -150,7 +149,6 @@ module.exports = controller => {
     controller.on('oauth_success', async authData => {
         console.log('******************-----/oauth_success/-----******************');
         console.log('-----/authData/-----')
-        console.dir(authData)
         
         try {
             let existingTeam = await controller.plugins.database.teams.get(authData.team.id);
@@ -173,8 +171,6 @@ module.exports = controller => {
                 created_by: authData.authed_user.id
             };
             const savedTeam = await controller.plugins.database.teams.save(existingTeam);
-            const teamData = await controller.plugins.database.teams.get(existingTeam.id);
-            console.log('@@@@@team data after saving team data', teamData);
             console.log('saved team');
             console.dir(savedTeam);
 			if (isNew) {
@@ -190,8 +186,7 @@ module.exports = controller => {
     controller.on('onboard', async (bot, params) => {
         const internal_url = 'slack://channel?team='+ params.teamId +'&id='+ params.channelId;
         const support_page = 'https://www.point-of-reference.com/contact/';
-        console.log('internal_url', internal_url);
-
+        
         await bot.startPrivateConversation(params.userId);
         await bot.say(`Hello, Referencebot here. I have joined your workspace. I deliver messages from ReferenceEdge to your Customer Reference Program (CRP) team and individual users, and assist users with finding customer references.\n`
                 + `I have created a public channel with the name <${internal_url}|crp_team> for the CRP Team. All updates for the CRP Team will be posted in this channel. `
@@ -235,7 +230,6 @@ module.exports = controller => {
         async (bot, message) => {
             try {
                 console.log('slash_command');
-                console.dir(message);
                 if(message.text && message.text.toLowerCase()  == 'help'){
                     await bot.replyEphemeral(message,
                         `This command allows you to start a search for customer reference resources, without being in Salesforce.\n`
@@ -249,8 +243,7 @@ module.exports = controller => {
                             token : bot.api.token,
                             user : message.user
                         });
-                        console.log('.......userprofile ....', userProfile);
-                        console.log(userProfile.user.profile.email);
+                        console.log('.......userprofile ....');
                         
                         const result = await bot.api.views.open({
                             trigger_id: message.trigger_id,
@@ -344,7 +337,6 @@ module.exports = controller => {
         'view_submission',
         async (bot, message) => {
             console.log('view_submission');
-            console.dir(message);
             try {
                 let existingConn = await connFactory.getConnection(message.team.id, controller);
                 
@@ -360,7 +352,9 @@ module.exports = controller => {
                         let email = message.view.private_metadata + '::' + actionName;
                         let mapval = await getRefTypes(existingConn,actionName);
                         if (actionName == 'content_search') {
-                            bot.httpBody({
+                            console.log('content search if called.');
+                            /** commented ::: will be used in next version.. */
+                            /* bot.httpBody({
                                 response_action: 'update',
                                 view: {
                                     "type": "modal",
@@ -400,7 +394,7 @@ module.exports = controller => {
                                         }
                                     ]
                                 }
-                            });
+                            }); */
                         } else {
                             bot.httpBody({
                                 response_action: 'update',
@@ -444,6 +438,7 @@ module.exports = controller => {
                             });
                         }
                     } else if (message.view.callback_id == 'oppselect') {
+                        console.log('oppSelect if called');
                         let metdata = message.view.private_metadata;
                         const email = metdata.split('::')[0];
                         let refselected = message.view.state.values.blkref.reftype_select.selected_option != null ? message.view.state.values.blkref.reftype_select.selected_option : 'NONE';
@@ -595,6 +590,7 @@ module.exports = controller => {
                                 }
                             });
                         } else {
+                            console.log('else called...', refselected);
                             if (refselected && refselected != 'NONE' && refselected != '' && refselected != null) {
                                 searchURL += '&type=' + refselected;
                             }
