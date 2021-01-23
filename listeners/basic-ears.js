@@ -352,9 +352,14 @@ module.exports = controller => {
                         let email = message.view.private_metadata + '::' + actionName;
                         //let mapval = await getRefTypes(existingConn,actionName);
                         if (actionName == 'content_search') {
-                            let mapval = await getOpp(existingConn,email,actionName);
+
+                            let mapval = await getOpp(existingConn,'#@#',actionName);
                             let searchURL1 = mapval['searchURL'];
                             console.log('content search if called.', searchURL1);
+                            /* let urlParams = searchURL1 ? searchURL1.split('?') : null;
+                            if(urlParams) {
+                                searchURL1 = urlParams[0] + '';
+                            } */
                             searchURL1 = 'Thanks! Please <' + searchURL1 + '|click to complete your request in Salesforce.>';
                             bot.httpBody({
                                 response_action: 'update',
