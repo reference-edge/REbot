@@ -355,7 +355,6 @@ module.exports = controller => {
 
                             let mapval = await getOpp(existingConn,email,actionName);
                             let searchURL1 = mapval['searchURL'];
-                            console.log('content search if called.', searchURL1);
                             let urlParams = searchURL1 ? searchURL1.split('?') : null;
                             if(urlParams) {
                                 searchURL1 = urlParams[0] + '?forAccount=false&forContent=true';
