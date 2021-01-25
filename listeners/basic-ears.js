@@ -353,13 +353,14 @@ module.exports = controller => {
                         //let mapval = await getRefTypes(existingConn,actionName);
                         if (actionName == 'content_search') {
 
-                            let mapval = await getOpp(existingConn,'#@#',actionName);
+                            let mapval = await getOpp(existingConn,email,actionName);
                             let searchURL1 = mapval['searchURL'];
                             console.log('content search if called.', searchURL1);
-                            /* let urlParams = searchURL1 ? searchURL1.split('?') : null;
+                            let urlParams = searchURL1 ? searchURL1.split('?') : null;
                             if(urlParams) {
-                                searchURL1 = urlParams[0] + '';
-                            } */
+                                searchURL1 = urlParams[0] + '?forAccount=false&forContent=true';
+                            }
+                            console.log('content search if called.', searchURL1); 
                             searchURL1 = 'Thanks! Please <' + searchURL1 + '|click to complete your request in Salesforce.>';
                             bot.httpBody({
                                 response_action: 'update',
