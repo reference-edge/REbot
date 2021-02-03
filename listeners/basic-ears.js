@@ -350,10 +350,10 @@ module.exports = controller => {
                         let actionName = 'account_search';
                         actionName = message.view.state.values.accblock.searchid.selected_option.value;
                         let email = message.view.private_metadata + '::' + actionName;
-                        //let mapval = await getRefTypes(existingConn,actionName);
+                        let mapval = await getRefTypes(existingConn,actionName);
                         if (actionName == 'content_search') {
 
-                            let mapval = await getOpp(existingConn,email,actionName);
+                            /* let mapval = await getOpp(existingConn,email,actionName);
                             let searchURL1 = mapval['searchURL'];
                             let urlParams = searchURL1 ? searchURL1.split('?') : null;
                             if(urlParams) {
@@ -386,9 +386,9 @@ module.exports = controller => {
                                         }
                                     ]
                                 }
-                            });
+                            }); */
                             /** commented ::: will be used in next version.. */
-                            /* bot.httpBody({
+                            bot.httpBody({
                                 response_action: 'update',
                                 view: {
                                     "type": "modal",
@@ -428,9 +428,9 @@ module.exports = controller => {
                                         }
                                     ]
                                 }
-                            });  */
+                            });
                         } else {
-                            let mapval = await getRefTypes(existingConn,actionName);
+                            //let mapval = await getRefTypes(existingConn,actionName);
                             bot.httpBody({
                                 response_action: 'update',
                                 view: {
