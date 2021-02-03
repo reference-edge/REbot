@@ -333,7 +333,7 @@ module.exports = controller => {
             console.dir(message);
     });
 
-    async function opportunityFlow (bot, message) {
+    async function opportunityFlow (bot, message, existingConn) {
         console.log('oppSelect if called');
         let metdata = message.view.private_metadata;
         const email = metdata.split('::')[0];
@@ -539,7 +539,7 @@ module.exports = controller => {
                         let email = message.view.private_metadata + '::' + actionName;
                         //let mapval = await getRefTypes(existingConn,actionName);
                         if (actionName == 'content_search') {
-                            await opportunityFlow(bot, message);
+                            await opportunityFlow(bot, message, existingConn);
                             /* let mapval = await getOpp(existingConn,email,actionName);
                             let searchURL1 = mapval['searchURL'];
                             let urlParams = searchURL1 ? searchURL1.split('?') : null;
@@ -660,7 +660,7 @@ module.exports = controller => {
                             });
                         }
                     } else if (message.view.callback_id == 'oppselect') {
-                        await opportunityFlow(bot, message);
+                        await opportunityFlow(bot, message, existingConn);
                         /* console.log('oppSelect if called');
                         let metdata = message.view.private_metadata;
                         const email = metdata.split('::')[0];
