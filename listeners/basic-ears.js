@@ -337,7 +337,7 @@ module.exports = controller => {
         console.log('oppSelect if called');
         let metdata = message.view.private_metadata;
         const email = metdata.split('::')[0];
-        let refselected = message.view.state.values.blkref.reftype_select.selected_option != null ? message.view.state.values.blkref.reftype_select.selected_option : 'NONE';
+        let refselected = message.view.state.values.blkref && message.view.state.values.blkref.reftype_select.selected_option != null ? message.view.state.values.blkref.reftype_select.selected_option : 'NONE';
         refselected = refselected && refselected != 'NONE' && refselected != '' && refselected != null ? (refselected.value.indexOf('::') > -1 ? refselected.value.split('::')[1] : refselected.value) : '';
         const actionName = metdata.split('::')[1];
         let mapval = await getOpp(existingConn,email,actionName);
