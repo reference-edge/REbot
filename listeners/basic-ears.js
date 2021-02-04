@@ -331,7 +331,7 @@ module.exports = controller => {
             
     });
 
-    async function opportunityFlow (bot, message, actionName, email) {
+    async function opportunityFlow (bot, message, existingConn, actionName, email) {
         console.log('oppSelect if called');
         //let metdata = message.view.private_metadata;
         //const email = metdata.split('::')[0];
