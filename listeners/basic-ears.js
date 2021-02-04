@@ -333,17 +333,14 @@ module.exports = controller => {
 
     async function opportunityFlow (bot, message, existingConn, actionName, email) {
         console.log('oppSelect if called');
-        //let metdata = message.view.private_metadata;
-        //const email = metdata.split('::')[0];
         let refselected = message.view.state.values.blkref && message.view.state.values.blkref.reftype_select.selected_option != null ? message.view.state.values.blkref.reftype_select.selected_option : 'NONE';
         refselected = refselected && refselected != 'NONE' && refselected != '' && refselected != null ? (refselected.value.indexOf('::') > -1 ? refselected.value.split('::')[1] : refselected.value) : '';
-        //const actionName = metdata.split('::')[1];
         console.log('----------actionName----------', actionName);
         let mapval = await getOpp(existingConn,email,actionName);
         let searchURL = mapval['searchURL'];
         console.log('------------searchURL----------', searchURL);
         let opps = mapval['opp'];
-        if (opps != null && opps.length > 0 && opps.length < 11) {
+        if (opps != null && opps.length > 0 && opps.length < 10) {
             bot.httpBody({
                 response_action: 'update',
                 view: {
@@ -384,7 +381,7 @@ module.exports = controller => {
                     ]
                 }
             });
-        } else if (opps != null && opps.length >= 11) {
+        } else if (opps != null && opps.length >= 10) {
             bot.httpBody({
                 response_action: 'update',
                 view: {
