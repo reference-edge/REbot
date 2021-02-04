@@ -340,8 +340,10 @@ module.exports = controller => {
         let refselected = message.view.state.values.blkref && message.view.state.values.blkref.reftype_select.selected_option != null ? message.view.state.values.blkref.reftype_select.selected_option : 'NONE';
         refselected = refselected && refselected != 'NONE' && refselected != '' && refselected != null ? (refselected.value.indexOf('::') > -1 ? refselected.value.split('::')[1] : refselected.value) : '';
         const actionName = metdata.split('::')[1];
+        console.log('----------actionName----------', actionName);
         let mapval = await getOpp(existingConn,email,actionName);
         let searchURL = mapval['searchURL'];
+        console.log('------------searchURL----------', searchURL);
         let opps = mapval['opp'];
         if (opps != null && opps.length > 0 && opps.length < 11) {
             bot.httpBody({
