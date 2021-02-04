@@ -325,21 +325,19 @@ module.exports = controller => {
     controller.on(
         'view_closed',
         async (bot, message) => {
-            console.log('-----------view_closed message -----------');
             bot.httpBody({
                 "response_action": "clear"
             });
             
-            console.dir(message);
     });
 
-    async function opportunityFlow (bot, message, existingConn) {
+    async function opportunityFlow (bot, message, actionName, email) {
         console.log('oppSelect if called');
-        let metdata = message.view.private_metadata;
-        const email = metdata.split('::')[0];
+        //let metdata = message.view.private_metadata;
+        //const email = metdata.split('::')[0];
         let refselected = message.view.state.values.blkref && message.view.state.values.blkref.reftype_select.selected_option != null ? message.view.state.values.blkref.reftype_select.selected_option : 'NONE';
         refselected = refselected && refselected != 'NONE' && refselected != '' && refselected != null ? (refselected.value.indexOf('::') > -1 ? refselected.value.split('::')[1] : refselected.value) : '';
-        const actionName = metdata.split('::')[1];
+        //const actionName = metdata.split('::')[1];
         console.log('----------actionName----------', actionName);
         let mapval = await getOpp(existingConn,email,actionName);
         let searchURL = mapval['searchURL'];
@@ -541,7 +539,7 @@ module.exports = controller => {
                         let email = message.view.private_metadata + '::' + actionName;
                         //let mapval = await getRefTypes(existingConn,actionName);
                         if (actionName == 'content_search') {
-                            await opportunityFlow(bot, message, existingConn);
+                            await opportunityFlow(bot, message, existingConn, actionName, email);
                             /* let mapval = await getOpp(existingConn,email,actionName);
                             let searchURL1 = mapval['searchURL'];
                             let urlParams = searchURL1 ? searchURL1.split('?') : null;
@@ -662,7 +660,10 @@ module.exports = controller => {
                             });
                         }
                     } else if (message.view.callback_id == 'oppselect') {
-                        await opportunityFlow(bot, message, existingConn);
+                        let metdata = message.view.private_metadata;
+                        const email = metdata.split('::')[0];
+                        const actionName = metdata.split('::')[1];
+                        await opportunityFlow(bot, message, existingConn, actionName, email);
                         /* console.log('oppSelect if called');
                         let metdata = message.view.private_metadata;
                         const email = metdata.split('::')[0];
