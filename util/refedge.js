@@ -74,7 +74,6 @@ module.exports = {
                 if (response != 'false') {
                     console.log(response);
                     response = JSON.parse(response);
-                    console.dir(response);
                     let oppList = response['opp'];
                     returnVal['searchURL'] = response['searchURL'];
                     oppList.forEach(function(oppWrapper){
@@ -97,7 +96,6 @@ module.exports = {
         let opp = [];
         name = encodeURIComponent(name);
         let url = '/refedge/rebot/OPP_TYPE_NAME' + '::' + email + '::' + name;
-        console.log(url);
         await conn.apex.get(url, (err, response) => {
             if (err) {
                 logger.log(err);

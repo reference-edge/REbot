@@ -31,8 +31,6 @@ module.exports = controller => {
         {
             pattern: '^(yes|yea|yup|yep|ya|sure|ok|y|yeah|yah)',
             handler: async function(response, convo, bot) {
-                console.log('response----');
-                console.log(response);
                 let teamResponse = await bot.api.team.info();
                 let existingConn = await connFactory.getConnection(teamResponse.team.id, controller);
                 try{

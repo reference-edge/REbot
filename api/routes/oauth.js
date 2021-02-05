@@ -8,17 +8,8 @@ module.exports = controller => {
 
         try {
             console.log('-----/oauth/req-----');
-            /*console.dir(req);
-            if (!req.query.state) {
-                return res.redirect('/auth-failed.html?error=missing_state_param');
-            }
-
-            if (process.env.STATE != req.query.state) {
-                return res.redirect('/auth-failed.html?error=invalid_state_param');
-            }*/
             const authData = await controller.adapter.validateOauthCode(req.query.code);
             console.log('-----/authData/-----')
-            console.dir(req.query)
             controller.trigger('oauth_success', authData);
             res.redirect(`https://slack.com/app_redirect?app=${process.env.SLACK_APP_ID}`);
         } catch (err) {

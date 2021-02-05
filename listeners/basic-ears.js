@@ -333,7 +333,6 @@ module.exports = controller => {
     });
 
     async function opportunityFlow (bot, message, existingConn, actionName, email) {
-        console.log('oppSelect if called');
         let refselected = message.view.state.values.blkref && message.view.state.values.blkref.reftype_select.selected_option != null ? message.view.state.values.blkref.reftype_select.selected_option : 'NONE';
         refselected = refselected && refselected != 'NONE' && refselected != '' && refselected != null ? (refselected.value.indexOf('::') > -1 ? refselected.value.split('::')[1] : refselected.value) : '';
         console.log('----------actionName----------', actionName);
@@ -484,7 +483,6 @@ module.exports = controller => {
                 }
             });
         } else {
-            console.log('else called...', refselected);
             if (refselected && refselected != 'NONE' && refselected != '' && refselected != null) {
                 searchURL += '&type=' + refselected;
             }
@@ -538,40 +536,7 @@ module.exports = controller => {
                         //let mapval = await getRefTypes(existingConn,actionName);
                         if (actionName == 'content_search') {
                             await opportunityFlow(bot, message, existingConn, actionName, email);
-                            /* let mapval = await getOpp(existingConn,email,actionName);
-                            let searchURL1 = mapval['searchURL'];
-                            let urlParams = searchURL1 ? searchURL1.split('?') : null;
-                            if(urlParams) {
-                                searchURL1 = urlParams[0] + '?forAccount=false&forContent=true';
-                            }
-                            console.log('content search if called.', searchURL1); 
-                            searchURL1 = 'Thanks! Please <' + searchURL1 + '|click to complete your request in Salesforce.>';
-                            bot.httpBody({
-                                response_action: 'update',
-                                view: {
-                                    "type": "modal",
-                                    "notify_on_close" : true,
-                                    "close": {
-                                        "type": "plain_text",
-                                        "text": "Close",
-                                        "emoji": true
-                                    },
-                                    "title": {
-                                        "type": "plain_text",
-                                        "text": "Continue Search",
-                                        "emoji": true
-                                    },
-                                    "blocks": [
-                                        {
-                                            "type": "section",
-                                            "text": {
-                                                "type": "mrkdwn",
-                                                "text": searchURL1
-                                            }
-                                        }
-                                    ]
-                                }
-                            }); */
+                            
                             /** commented ::: will be used in next version.. */
                             /* bot.httpBody({
                                 response_action: 'update',
@@ -662,190 +627,7 @@ module.exports = controller => {
                         const email = metdata.split('::')[0];
                         const actionName = metdata.split('::')[1];
                         await opportunityFlow(bot, message, existingConn, actionName, email);
-                        /* console.log('oppSelect if called');
-                        let metdata = message.view.private_metadata;
-                        const email = metdata.split('::')[0];
-                        let refselected = message.view.state.values.blkref.reftype_select.selected_option != null ? message.view.state.values.blkref.reftype_select.selected_option : 'NONE';
-                        refselected = refselected && refselected != 'NONE' && refselected != '' && refselected != null ? (refselected.value.indexOf('::') > -1 ? refselected.value.split('::')[1] : refselected.value) : '';
-                        const actionName = metdata.split('::')[1];
-                        let mapval = await getOpp(existingConn,email,actionName);
-                        let searchURL = mapval['searchURL'];
-                        let opps = mapval['opp'];
-                        if (opps != null && opps.length > 0 && opps.length < 11) {
-                            bot.httpBody({
-                                response_action: 'update',
-                                view: {
-                                    "type": "modal",
-                                    "notify_on_close" : true,
-                                    "callback_id": "searchselect",
-                                    "private_metadata" : searchURL + '::' + refselected,
-                                    "submit": {
-                                        "type": "plain_text",
-                                        "text": "Next",
-                                        "emoji": true
-                                    },
-                                    "title": {
-                                        "type": "plain_text",
-                                        "text": "Select an Opportunity",
-                                        "emoji": true
-                                    },
-                                    "blocks": [
-                                        {
-                                            "type": "input",
-                                            "block_id": "blkselectopp",
-                                            "element": {
-                                                "type": "static_select",
-                                                "action_id": "opp_select",
-                                                "placeholder": {
-                                                    "type": "plain_text",
-                                                    "text": "Select an Opp",
-                                                    "emoji": true
-                                                },
-                                                "options": opps
-                                            },
-                                            "label": {
-                                                "type": "plain_text",
-                                                "text": "Recent Opportunities",
-                                                "emoji": true
-                                            }
-                                        }
-                                    ]
-                                }
-                            });
-                        } else if (opps != null && opps.length >= 11) {
-                            bot.httpBody({
-                                response_action: 'update',
-                                view: {
-                                    "type": "modal",
-                                    "notify_on_close" : true,
-                                    "callback_id": "searchselectopplarge",
-                                    "private_metadata" : searchURL + '::' + refselected + '::' + email,
-                                    "submit": {
-                                        "type": "plain_text",
-                                        "text": "Next",
-                                        "emoji": true
-                                    },
-                                    "title": {
-                                        "type": "plain_text",
-                                        "text": "Select an Opportunity",
-                                        "emoji": true
-                                    },
-                                    "blocks": [
-                                        {
-                                            "type": "section",
-                                            "text": {
-                                                "type": "plain_text",
-                                                "text": "•Select from the 10 most recently accessed opportunities.\n•Or lookup an opportunity by name or account.",
-                                            }
-                                        },
-                                        {
-                                            "type": "input",
-                                            "optional": true,
-                                            "block_id": "blkselectopp",
-                                            "element": {
-                                                "type": "static_select",
-                                                "action_id": "opp_select",
-                                                "placeholder": {
-                                                    "type": "plain_text",
-                                                    "text": "Select",
-                                                    "emoji": true
-                                                },
-                                                "options": opps
-                                            },
-                                            "label": {
-                                                "type": "plain_text",
-                                                "text": "Recent Opportunities",
-                                                "emoji": true
-                                            }
-                                        },
-                                        {
-                                            "type": "section",
-                                            "text": {
-                                                "type": "mrkdwn",
-                                                "text": "*OR*"
-                                            }
-                                        },
-                                        {
-                                            "type": "input",
-                                            "optional": true,
-                                            "block_id" : "accblock",
-                                            "element": {
-                                                "type": "plain_text_input",
-                                                "action_id": "account_name",
-                                                "placeholder": {
-                                                    "type": "plain_text",
-                                                    "text": "Type account"
-                                                },
-                                                "multiline": false
-                                            },
-                                            "label": {
-                                                "type": "plain_text",
-                                                "text": "Account Lookup",
-                                                "emoji": true
-                                            }
-                                        },
-                                        {
-                                            "type": "section",
-                                            "text": {
-                                                "type": "mrkdwn",
-                                                "text": "*OR*"
-                                            }
-                                        },
-                                        {
-                                            "type": "input",
-                                            "optional": true,
-                                            "block_id" : "oppblock",
-                                            "element": {
-                                                "type": "plain_text_input",
-                                                "action_id": "opp_name",
-                                                "placeholder": {
-                                                    "type": "plain_text",
-                                                    "text": "Type opportunity"
-                                                },
-                                                "multiline": false
-                                            },
-                                            "label": {
-                                                "type": "plain_text",
-                                                "text": "Opportunity Lookup",
-                                                "emoji": true
-                                            }
-                                        }
-                                    ]
-                                }
-                            });
-                        } else {
-                            console.log('else called...', refselected);
-                            if (refselected && refselected != 'NONE' && refselected != '' && refselected != null) {
-                                searchURL += '&type=' + refselected;
-                            }
-                            searchURL = 'Thanks! Please <' + searchURL + '|click to complete your request in Salesforce.>';
-                            bot.httpBody({
-                                response_action: 'update',
-                                view: {
-                                    "type": "modal",
-                                    "notify_on_close" : true,
-                                    "close": {
-                                        "type": "plain_text",
-                                        "text": "Close",
-                                        "emoji": true
-                                    },
-                                    "title": {
-                                        "type": "plain_text",
-                                        "text": "Continue Search",
-                                        "emoji": true
-                                    },
-                                    "blocks": [
-                                        {
-                                            "type": "section",
-                                            "text": {
-                                                "type": "mrkdwn",
-                                                "text": searchURL
-                                            }
-                                        }
-                                    ]
-                                }
-                            });
-                        } */
+                        
                     } else if (message.view.callback_id == 'searchselectopplarge') {
                         let metadata = message.view.private_metadata;
                         let searchURL = metadata.split('::')[0];
