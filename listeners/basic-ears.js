@@ -13,10 +13,11 @@ module.exports = controller => {
         try {
             console.log('------direct mention---');
             const supportUrl = `https://www.point-of-reference.com/contact/`;
-
-            if (message.text.includes('hello')) {
+            let messageText = message.text ? message.text.toLowerCase() : '';
+            if (messageText.includes('hello')) {
                 bot.replyEphemeral(message, `Hi, you can invite me to the channel for Customer Reference Team to receive updates!`);
-            } else if (message.text == 'connect to a salesforce instance' || message.intent === 'connect_to_sf') {
+            } else if (messageText == 'connect to a salesforce instance' || messageText == 'connect to sf'  
+                || (messageText.includes('connect') && messageText.includes('salesforce') )) {//|| message.intent === 'connect_to_sf'
                 let existingConn = await connFactory.getConnection(message.team, controller);
 
                 if (!existingConn) {
@@ -28,7 +29,7 @@ module.exports = controller => {
                         await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`); */
                         await bot.beginDialog('sf_auth');
                  }
-            } else if (message.text.includes('help')) {
+            } else if (messageText.includes('help')) {
                 bot.replyEphemeral(message, 
                 `Hello, Referencebot here. I can help you find customer references, and deliver messages related to your customer reference requests. \n`
                 +`Use the /references command to start a search for reference accounts or reference content. \n`

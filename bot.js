@@ -9,13 +9,13 @@ const projectId = process.env.PROJECT_ID;
 const client_email = process.env.CLIENT_EMAIL;
 const private_key = process.env.PRIVATE_KEY.replace(/\\n/gm, '\n');
 
-const dialogflowMiddleware = require('botkit-middleware-dialogflow')({
+/* const dialogflowMiddleware = require('botkit-middleware-dialogflow')({
     projectId,
     credentials: {
         client_email,
         private_key
     }
-});
+}); */
 const mongoProvider = require('./db/mongo-provider')({
     mongoUri: process.env.MONGO_CONNECTION_STRING
 });
@@ -58,7 +58,7 @@ const controller = new Botkit({
 controller.webserver.use(corsMiddleware);
 controller.addPluginExtension('database', mongoProvider);
 
-controller.middleware.receive.use(dialogflowMiddleware.receive);
+//controller.middleware.receive.use(dialogflowMiddleware.receive);
 controller.middleware.receive.use(getFilterMiddleware);
 controller.publicFolder('', __dirname + '/public');
 
