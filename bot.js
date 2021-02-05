@@ -5,9 +5,11 @@ const { SlackAdapter, SlackMessageTypeMiddleware, SlackEventMiddleware } = requi
 const { getFilterMiddleware } = require('./listeners/middleware/migration-filter');
 const errorHandlerMiddleware = require('./api/middleware/error-handler');
 const corsMiddleware = require('./api/middleware/cors');
-const projectId = process.env.PROJECT_ID;
-const client_email = process.env.CLIENT_EMAIL;
-const private_key = process.env.PRIVATE_KEY.replace(/\\n/gm, '\n');
+/*Commented Dialogflow code due to error with Production account. 
+Keeping here just for future reference.*/ 
+//const projectId = process.env.PROJECT_ID;
+//const client_email = process.env.CLIENT_EMAIL;
+//const private_key = process.env.PRIVATE_KEY.replace(/\\n/gm, '\n');
 
 /* const dialogflowMiddleware = require('botkit-middleware-dialogflow')({
     projectId,
