@@ -3,9 +3,9 @@ const connFactory = require('../../util/connection-factory');
 const { saveTeamId } = require('../../util/refedge');
 const logger = require('../../common/logger');
 
-module.exports = (app, controller) => {
+module.exports = controller => {
 
-    app.get('/sfauth/callback', async (req, res) => {
+    controller.webserver.get('/sfauth/callback', async (req, res) => {
 
         try {
 
@@ -16,14 +16,16 @@ module.exports = (app, controller) => {
             }
 
             if (req.query.code && req.query.state) {
+                console.log('after successful connecttion... during saving...');
                 let conn = await connFactory.connect(req.query.code, controller, req.query.state);
                 let teamData = { addTeam: req.query.state };
-                saveTeamId(conn, teamData);
+                await saveTeamId(conn, teamData);
                 res.status(302);
                 res.redirect('/auth-success.html');
             }
         } catch (err) {
             logger.log('salesforce auth error:', err);
+            //res.redirect('/auth-failed.html');
         }
     });
 }

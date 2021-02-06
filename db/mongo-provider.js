@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 
 module.exports = config => {
@@ -18,7 +17,7 @@ module.exports = config => {
 
     tables.forEach(tab => {
         let model = createModel(db, tab);
-        storage[tab] = setupStorage(model);
+        storage[tab] = setupStorage(model, tab);
     });
     return storage;
 };
@@ -36,31 +35,71 @@ function createModel(db, table) {
         if (err.name === 'OverwriteModelError') {
             return db.model(table);
         } else {
+            console.log('error in createModel');
             throw(err);
         }
     }
 }
 
-function setupStorage(table) {
+function setupStorage(tableModel, tabelName) {
     return {
-        get: (id, cb) => {
-            return table.findOne({ id: id }).lean().exec(cb);
+        get: async (id) => {
+
+            try {
+                const result = await tableModel.findOne({ id: id });
+
+                if (!result) {
+                    return null;
+                    //throw new Error(`${tabelName} not found for id ${id}`);
+                }
+                return result._doc;
+            } catch (err) {
+                console.log('error in setupStorage get');
+                throw err;
+            }
         },
-        save: (data, cb) => {
-            return table
-                .findOneAndUpdate({ id: data.id }, data, {
-                    upsert: true,
-                    new: true
-                }).lean().exec(cb);
+        save: async (data) => {
+
+            try {
+                await tableModel.findOneAndUpdate(
+                    { id: data.id },
+                    data,
+                    { upsert: true, new: true });
+                return 'success';
+            } catch (err) {
+                console.log('error in setupStorage save');
+                throw err;
+            }
         },
-        all: cb => {
-            return table.find({}).lean().exec(cb);
+        all: async () => {
+
+            try {
+                const result = await tableModel.find({});
+                return result.map(d => d._doc);
+            } catch (err) {
+                console.log('error in setupStorage all');
+                throw err;
+            }
         },
-        delete: (id, cb) => {
-            return table.deleteOne({ id: id }).lean().exec(cb);
+        delete: async (id) => {
+
+            try {
+                await tableModel.deleteOne({ id: id });
+                return 'success';
+            } catch (err) {
+                console.log('error in setupStorage delete');
+                throw err;
+            }
         },
-        find: (data, cb, options) => {
-            return table.find(data, null, options).lean().exec(cb);
+        find: async (data, options) => {
+
+            try {
+                const result = await tableModel.find(data, null, options);
+                return result.map(d => d._doc);
+            } catch (err) {
+                console.log('error in setupStorage find');
+                throw err;
+            }
         }
     };
 }

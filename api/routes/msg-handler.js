@@ -1,9 +1,9 @@
 const logger = require('../../common/logger');
 const { checkTeamMigration } = require('../../listeners/middleware/migration-filter');
 
-module.exports = (app, controller) => {
+module.exports = controller => {
 
-    app.post('/post-message', async (req, res) => {
+    controller.webserver.post('/post-message', async (req, res) => {
 
         try {
 
@@ -11,7 +11,7 @@ module.exports = (app, controller) => {
                 return res.status(400).json({ ok: false, msg: 'team id is required' });
             }
             // to get message, teamId, userEmail/channelId and orgId in req body
-            controller.trigger('post-message', [req.body]);
+            controller.trigger('post-message', req.body);
             return res.status(200).json({ ok: true, msg: 'message posted to slack' });
         } catch (err) {
             logger.log(err);
